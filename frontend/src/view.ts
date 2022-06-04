@@ -621,6 +621,11 @@ define(["d3/d3.v7", "ace/ace"], function (
     }
 
     private highlightLine(lineNumber: number, kind: "current" | "previous") {
+      // fix: Since we use Ace to highlight the line, we must use the offset
+      // (for example, if the starting line number is 10 and `lineNumber` is 12,
+      // we must pass 3 into Ace)
+      const offsetLineNumber = lineNumber - this._firstLineNumber + 1;
+
       const svg = kind === "current" ? this._currLineSVG : this._prevLineSVG;
       if (!svg.node()?.isConnected) {
         d3.select(this._node).append(() => svg.node());
@@ -632,7 +637,7 @@ define(["d3/d3.v7", "ace/ace"], function (
         .style(
           "top",
           // 16px is the line height, and 3px was manually tested to center the arrow vertically
-          `${(lineNumber - this._firstLineNumber) * 16 + 3}px`
+          `${(offsetLineNumber - 1) * 16 + 3}px`
         );
 
       const marker =
@@ -641,12 +646,14 @@ define(["d3/d3.v7", "ace/ace"], function (
       if (marker !== null) {
         this._editor?.session.removeMarker(marker);
       }
-      if (lineNumber !== Math.floor(lineNumber) /** is fractional */) {
+      if (
+        offsetLineNumber !== Math.floor(offsetLineNumber) /** is fractional */
+      ) {
         return;
       }
       // https://stackoverflow.com/questions/27531860/how-to-highlight-a-certain-line-in-ace-editor?noredirect=1&lq=1
       const newMarker = this._editor?.session.addMarker(
-        new ace.Range(lineNumber - 1, 0, lineNumber - 1, 1),
+        new ace.Range(offsetLineNumber - 1, 0, offsetLineNumber - 1, 1),
         kind === "current"
           ? "code__area__currentLine"
           : "code__area__previousLine",
