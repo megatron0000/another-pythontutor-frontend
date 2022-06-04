@@ -7,17 +7,20 @@
     "@jsplumb/browser-ui": "^5.5.5",
     "axios": "^0.27.2",
     "express": "4.17.3",
-    "jsframe.js": "^1.6.2",
-    "pm2": "5.2.0",
-    "typescript": "4.6.3"
+    "jsframe.js": "^1.6.2"
   },
   "scripts": {
-    "start": "pm2 start ecosystem.config.js && pm2 log"
+    "watch-backend": "nodemon --ignore 'frontend/*' -e js index.js",
+    "watch-frontend": "cd frontend/ && tsc --watch --preserveWatchOutput",
+    "start": "concurrently \"npm:watch*\""
   },
   "devDependencies": {
     "@types/acorn": "^4.0.6",
     "@types/d3": "^7.1.0",
     "@types/estree": "^0.0.51",
-    "@types/requirejs": "2.1.34"
+    "@types/requirejs": "2.1.34",
+    "concurrently": "^7.2.1",
+    "nodemon": "^2.0.16",
+    "typescript": "^4.7.3"
   }
 }
