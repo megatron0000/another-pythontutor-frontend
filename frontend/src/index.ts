@@ -193,12 +193,18 @@ require([
       jsplumbInstance
     );
     visualizerContainer.style.transform = "";
-    controller.advanceStep(); // display the first step
     buttonPrev.disabled = controller.isFirstStep();
     buttonNext.disabled = controller.isLastStep();
     buttonVisualize.disabled = false;
     buttonVisualize.textContent = textBackup;
+
+    // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),
+    // before the call to advanceStep().
+    // Otherwise, the controller is unable to calculate coordinates
+    // (because the page has not been loaded) and the connection arrows
+    // end up pointing to the wrong place (the origin)
     window.location.hash = "#visualize";
+    controller.advanceStep(); // display the first step
   });
 
   /**
