@@ -1,0 +1,396 @@
+/**
+ * CSS rules adapted from pythontutor. Pythontutor license:
+ */
+
+/**
+ * Copyright (C) Philip J. Guo (philip@pgbovine.net)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+.navigation-menu {
+  background-color: white;
+  padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 8px;
+  z-index: 20; /* to stay on top of the console window */
+  /* 
+    This is also to stay on top of the console window.
+    What happens is that the console window continer has a child with position:fixed;
+    Therefore it (the child) would be displayed on top of the navigation-menu
+    no matter the z-indexes (because positioned elements have
+    priority over unpositioned elements).
+    By setting a position on the navigation-menu, both (i) console window
+    and (ii) navigation-menu have a position attribute, so they are now
+    on "equal-footing" and who appears on top is controlled by z-index
+  */
+  position: relative;
+}
+
+.float-right {
+  float: right;
+}
+
+.draggable:hover {
+  cursor: grab;
+  user-select: none;
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+
+.zoom-container {
+  padding-top: 10px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#monaco-container {
+  height: 100%;
+  top: 10px;
+  position: relative;
+}
+
+.console-window-container {
+  z-index: 10;
+  position: relative;
+  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  font-size: 14px;
+}
+
+.console-content-container {
+  border: 2px solid #4784d4;
+  font-size: 13.333px;
+  border: 2px solid #4784d4;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  /* 
+   fix: make the content stretch down until the container bottom, 
+   because jsframe lib does not do this 
+  */
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.console__line {
+  display: flex;
+  border-bottom: 1px solid darkgray;
+  padding: 5px;
+}
+
+.console__line__content {
+  flex-grow: 3;
+}
+
+.console__line__linenumber {
+  flex-grow: 1;
+  flex-shrink: 0;
+  text-align: end;
+  color: darkgray;
+}
+
+.visualizer__container {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 10pt;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.visualizer__context__container {
+  margin-right: 32px;
+}
+
+.visualizer__heap__container {
+  position: relative;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: min-content;
+  /* https://stackoverflow.com/questions/61888002/how-to-avoid-css-grid-stretching-rows */
+  grid-template-rows: auto 1fr;
+}
+
+.grid__col1 {
+  grid-column-start: 1;
+}
+
+.grid__col2 {
+  grid-column-start: 2;
+}
+
+.grid__row2 {
+  grid-row-start: 2;
+}
+
+/* .filling {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  background-color: #faebbf;
+  border-bottom: 1px #888 solid;
+} */
+
+.code__area {
+  border: 1px solid #a6b3b6;
+}
+
+.code__area__currentLine {
+  position: absolute;
+  background: rgba(100, 200, 100, 0.7);
+  /* Must play nice with visualization-menu and console window */
+  z-index: 8;
+}
+
+.code__area__previousLine {
+  position: absolute;
+  background: rgba(100, 200, 100, 0.5);
+  /* Must play nice with visualization-menu and console window */
+  z-index: 8;
+}
+
+.heap__element__container {
+  position: absolute;
+  display: inline-block;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.heap__element {
+  padding-left: 2px;
+  position: relative;
+}
+
+.heap__element__typeLabel {
+  font-size: 8pt;
+  color: #555;
+  margin-bottom: 2px;
+}
+
+.heap__element__array {
+  border: 0px solid black;
+  border-spacing: 0px;
+  background-color: #ffffc6;
+}
+
+.heap__element__array_index {
+  padding-left: 4px;
+  padding-top: 2px;
+  padding-bottom: 3px;
+  font-size: 8pt;
+  color: #777;
+  text-align: left;
+  border-left: 1px solid #555555;
+}
+
+.heap__element__array__value {
+  position: relative;
+  padding-top: 0px;
+  padding-bottom: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: bottom;
+  border-bottom: 1px solid #555555;
+  border-left: 1px solid #555555;
+}
+
+.heap__element__object {
+  border-spacing: 1px;
+  font-size: 10pt;
+}
+
+/* .heap__element__object__entry {
+
+} */
+
+.heap__element__object__key {
+  padding-top: 6px /*15px*/;
+  padding-bottom: 6px;
+  padding-left: 10px;
+  padding-right: 4px;
+  text-align: right;
+  background-color: #faebbf;
+  border-bottom: 1px #888 solid;
+}
+
+.heap__element__object__value {
+  position: relative;
+  border-left: 1px #888 solid;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-right: 10px;
+  padding-left: 4px;
+  background-color: #ffffc6;
+  border-bottom: 1px #888 solid;
+}
+
+.heap__element__function {
+  font-size: 8pt;
+  font-family: monospace;
+  margin: 1em 0;
+}
+
+.stack__frame {
+  border-left: 1px solid #a6b3b6;
+  display: inline-block;
+  margin-right: auto;
+  margin-left: 0;
+  /* background-color: #ffffff; */
+  margin-bottom: 15px;
+  padding: 2px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 4px;
+  font-size: 10pt;
+  /* background-color: #808080; */
+}
+
+.stack__frame.active {
+  background-color: #e2ebf6;
+  /* background-color: #d7e7fb; */
+  /* background-color: #c0daf8; */
+}
+
+.stack__frame__header {
+  font-family: Andale mono, monospace;
+  font-size: 10pt;
+  margin-top: 4px;
+  margin-bottom: 3px;
+  white-space: nowrap;
+}
+
+.stack__frame__body {
+  text-align: right;
+  padding-top: 3px;
+  margin-left: auto;
+  margin-right: 0px;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+/* .stack__frame__variable {
+
+} */
+
+.stack__frame__body__variable__identifier {
+  text-align: right;
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.stack__frame__body__variable__value {
+  position: relative;
+  text-align: left;
+  border-bottom: 1px solid #aaaaaa;
+  border-left: 1px solid #aaaaaa;
+  vertical-align: middle;
+  padding-top: 3px;
+  padding-left: 3px;
+  padding-bottom: 3px;
+}
+
+.return_value_identifier {
+  color: red;
+}
+
+.value__pointer {
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+
+.value__string {
+  font-family: Andale mono, monospace;
+  white-space: nowrap;
+}
+
+/* .value__number {
+
+} */
+
+/* .value__null {
+
+} */
+
+/* .value__undefined {
+
+}
+
+.value__boolean {
+
+} */
+
+.anchor__in {
+  position: absolute;
+  height: 100%;
+}
+
+.heap__element.array .anchor__in {
+  width: 23pt;
+}
+
+.heap__element.object .anchor__in {
+  width: 25pt;
+}
+
+.heap__element.function .anchor__in {
+  width: 32pt;
+}
+
+.anchor__out {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  right: min(10px, 50%);
+  top: 50%;
+}
+
+.heap__element__array__value .anchor__out {
+  right: 50%;
+}
+
+/* for debug: */
+.anchor__in,
+.anchor__out {
+  /* background-color: red; */
+  /* opacity: 0.5; */
+  /* width: 10px; */
+  /* height: 10px; */
+}
+
+.ace_warning,
+.ace_error,
+.ace_info {
+  background-image: none !important;
+}
+
+/* https://stackoverflow.com/questions/24757506/how-to-disable-in-ace-editor-the-selection */
+.ace_marker-layer .ace_selection {
+  background: transparent !important;
+}
+.ace_cursor {
+  color: transparent !important;
+}

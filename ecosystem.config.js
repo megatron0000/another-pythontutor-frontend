@@ -11,7 +11,7 @@ module.exports = {
       cwd: "frontend",
       interpreter: "npx",
       autorestart: false,
-      watch: "frontend/src"
+      watch: "src"
     }
   ]
 };

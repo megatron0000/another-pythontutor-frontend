@@ -7,111 +7,170 @@
  * this code currently does not explicitly support all of pythontutor's
  * features (like closures)
  *
- * Too learn how pythontutor processes the debugger output and encodes JS entities,
+ * To learn how pythontutor processes the debugger output and encodes JS entities,
  * see file `v4-cokapi/backends/javascript/jslogger.js` in the pythontutor repo
  */
 
-/* eslint-disable import/no-amd, no-undef */
+/**
+ * TODO: Type the pythontutor trace format and substitute these typings for the `any`
+ * types in this file
+ */
 
-define([], function () {
-  /**
-   * @return {Trace}
-   */
-  function convertTrace(pyTutorTrace) {
-    const { trace: pySteps } = pyTutorTrace;
+import TraceModule, {
+  HeapElement,
+  HeapElementId,
+  Identifier,
+  StackFrame,
+  Stdout,
+  Step,
+  Trace,
+  Value
+} from "../types/trace";
 
-    return pySteps.map((pyStep) => {
-      const {
-        stdout,
-        func_name: function_name,
-        stack_to_render: pyStack,
-        globals: pyGlobals,
-        ordered_globals,
-        line,
-        event,
-        heap: pyHeap
-      } = pyStep;
+define([], function (): TraceModule {
+  function convertTrace(pyTutorTrace: any): Trace {
+    const { trace: pySteps, code } = pyTutorTrace;
 
-      /** @type {StackFrame[]} */
-      const stack_frames = pyStack.map((pyFrame) => {
+    return {
+      programCode: code,
+      steps: pySteps.map((pyStep: any, index: any) => {
         const {
+          // stdout: pyStdout,
           func_name: function_name,
-          frame_id,
-          ordered_varnames: ordered_locals,
-          encoded_locals: pyLocals
-        } = pyFrame;
+          stack_to_render: pyStack,
+          globals: pyGlobals,
+          ordered_globals,
+          line,
+          col,
+          event,
+          heap: pyHeap
+        } = pyStep;
 
-        /** @type {Record<Identifier, Value>} */
-        const locals = Object.keys(pyLocals)
-          .filter((x) => x !== "__return__")
-          .map((pyLocal) => [pyLocal, convertPyValueToValue(pyLocals[pyLocal])])
+        const stack_frames: StackFrame[] = pyStack.map((pyFrame: any) => {
+          const {
+            func_name: function_name,
+            frame_id,
+            ordered_varnames,
+            encoded_locals: pyLocals
+          } = pyFrame;
+
+          const ordered_locals = ordered_varnames.filter(
+            (x: any) => x !== "__return__"
+          );
+
+          const locals: Record<Identifier, Value> = Object.keys(pyLocals)
+            .filter(x => x !== "__return__")
+            .map<[string, Value]>(pyLocal => [
+              pyLocal,
+              convertPyValueToValue(pyLocals[pyLocal])
+            ])
+            .reduce((prev, [key, value]) => {
+              prev[key] = value;
+              return prev;
+            }, {} as Record<Identifier, Value>);
+
+          const return_value = pyLocals.hasOwnProperty("__return__")
+            ? convertPyValueToValue(pyLocals["__return__"])
+            : undefined;
+
+          const result: StackFrame = {
+            function_name,
+            frame_id,
+            ordered_locals,
+            locals,
+            return_value
+          };
+
+          return result;
+        });
+
+        const globals: Record<Identifier, Value> = Object.keys(pyGlobals)
+          .map<[string, Value]>(pyGlobal => [
+            pyGlobal,
+            convertPyValueToValue(pyGlobals[pyGlobal])
+          ])
           .reduce((prev, [key, value]) => {
             prev[key] = value;
             return prev;
-          }, {});
+          }, {} as Record<Identifier, Value>);
 
-        /** @type {StackFrame} */
-        const result = {
+        stack_frames.unshift({
+          frame_id: 0,
+          function_name: "Global frame",
+          locals: globals,
+          ordered_locals: ordered_globals
+        });
+
+        const heap: Record<HeapElementId, HeapElement> = Object.keys(pyHeap)
+          .map<[string, HeapElement]>(pyHeapElemId => [
+            pyHeapElemId,
+            convertPyHeapElementToHeapElement(
+              pyHeap[pyHeapElemId],
+              pyHeapElemId
+            )
+          ])
+          .reduce((prev, [key, value]) => {
+            prev[key] = value;
+            return prev;
+          }, {} as Record<HeapElementId, HeapElement>);
+
+        const stdout: Stdout = pySteps
+          .slice(0, index + 1) // only process up to the current step
+          .reduce(
+            (
+              prev: Stdout,
+              { stdout: pyContent }: { stdout: string },
+              stepIndex: number
+            ) => {
+              // edge case: at the 1st step, prevStepLine===undefined
+              const prevStepLine = pySteps[stepIndex - 1]?.line;
+
+              if (prev.length === 0) {
+                // there was no output before.
+                // Now, either there still is no output,
+                // or new output has been generated
+                return pyContent === ""
+                  ? []
+                  : // -1 to remove the trailing \n
+                    [{ line: prevStepLine, content: pyContent.slice(0, -1) }];
+              }
+
+              const prevContentLength = prev.reduce(
+                // +1 because the pythontutor output always has an additional \n
+                // at each line
+                (prev, { content }) => prev + content.length + 1,
+                0
+              );
+              // -1 to remove the trailing \n
+              const newContent = pyContent.slice(prevContentLength, -1);
+
+              // there is no new output at this step
+              if (newContent === "") {
+                return [...prev];
+              }
+
+              // there IS new output at this step
+              return [...prev, { line: prevStepLine, content: newContent }];
+            },
+            []
+          );
+
+        const step: Step = {
+          stdout,
           function_name,
-          frame_id,
-          ordered_locals,
-          locals
+          stack_frames,
+          line,
+          col,
+          event,
+          heap
         };
 
-        return result;
-      });
-
-      /** @type {Record<Identifier, Value>} */
-      const globals = Object.keys(pyGlobals)
-        .map((pyGlobal) => [
-          pyGlobal,
-          convertPyValueToValue(pyGlobals[pyGlobal])
-        ])
-        .reduce((prev, [key, value]) => {
-          prev[key] = value;
-          return prev;
-        }, {});
-
-      /** @type {Record<HeapElementId, HeapElement>} */
-      const heap = Object.keys(pyHeap)
-        .map((pyHeapElemId) => [
-          pyHeapElemId,
-          convertPyHeapElementToHeapElement(pyHeap[pyHeapElemId], pyHeapElemId)
-        ])
-        .reduce((prev, [key, value]) => {
-          prev[key] = value;
-          return prev;
-        }, {});
-
-      const return_value =
-        pyStack.length > 0 &&
-        pyStack[pyStack.length - 1].encoded_locals.hasOwnProperty("__return__")
-          ? convertPyValueToValue(
-              pyStack[pyStack.length - 1].encoded_locals["__return__"]
-            )
-          : undefined;
-
-      /** @type {Step} */
-      const step = {
-        stdout,
-        function_name,
-        stack_frames,
-        globals,
-        ordered_globals,
-        line,
-        event,
-        heap,
-        return_value
-      };
-
-      return step;
-    });
+        return step;
+      })
+    };
   }
 
-  /**
-   * @return {Value}
-   */
-  function convertPyValueToValue(pyValue) {
+  function convertPyValueToValue(pyValue: any): Value {
     if (typeof pyValue === "number") {
       return { kind: "number", value: pyValue };
     }
@@ -170,11 +229,10 @@ define([], function () {
     throw new Error("We do not currently handle Symbols");
   }
 
-  /**
-   * @param {string} id
-   * @return {HeapElement}
-   */
-  function convertPyHeapElementToHeapElement(pyHeapElement, id) {
+  function convertPyHeapElementToHeapElement(
+    pyHeapElement: any,
+    id: string
+  ): HeapElement {
     const [pyKind] = pyHeapElement;
 
     if (pyKind === "JS_FUNCTION") {
@@ -186,7 +244,7 @@ define([], function () {
       const [, ...pyValues] = pyHeapElement;
       return {
         kind: "array",
-        values: pyValues.map((pyValue) => convertPyValueToValue(pyValue)),
+        values: pyValues.map((pyValue: any) => convertPyValueToValue(pyValue)),
         id
       };
     }
@@ -197,7 +255,7 @@ define([], function () {
       return {
         kind: "object",
         id,
-        entries: pyKeyValuePairs.map(([pyKey, pyValue]) => ({
+        entries: pyKeyValuePairs.map(([pyKey, pyValue]: [any, any]) => ({
           key: pyKey,
           value: convertPyValueToValue(pyValue)
         }))
@@ -210,5 +268,7 @@ define([], function () {
     throw new Error("We do not currently handle SET and DICT");
   }
 
-  return convertTrace;
+  return {
+    convertTrace
+  };
 });

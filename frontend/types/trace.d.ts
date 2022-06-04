@@ -1,16 +1,26 @@
-export type Trace = Step[];
+/**
+ * We use a trace format that differs slightly from pythontutor,
+ * so this module knows how to make the conversion
+ */
+
+export interface Trace {
+  programCode: string;
+  steps: Step[];
+}
 
 export interface Step {
-  stdout: string;
+  stdout: Stdout;
   line: number;
+  col: number;
   function_name: string;
   event: Event;
-  return_value?: Value; // if pythontutor is consistent, will only be present when event === "return"
-  globals: Record<Identifier, Value>;
-  ordered_globals: Identifier[];
-  stack_frames: StackFrame[];
+  stack_frames: StackFrame[]; // the first frame is the global scope, with id=0
   heap: Record<HeapElementId, HeapElement>;
 }
+
+export type Stdout = { content: string; line: number }[];
+
+export type StackFrameId = number;
 
 export type HeapElementId = string;
 
@@ -20,30 +30,35 @@ export type Event = "step_line" | "call" | "return" | "exception";
 
 export interface StackFrame {
   function_name: string;
-  frame_id: number;
+  // id is 0 for the first frame (global frame)
+  frame_id: StackFrameId;
   locals: Record<Identifier, Value>;
   ordered_locals: Identifier[];
+  // assuming pythontutor is correct,
+  // will only be present when Step.event === "return"
+  return_value?: Value;
 }
 
-export type HeapElement =
-  | HeapArray
-  | HeapObject
-  | HeapFunction
-  | PrimitiveValue;
+export type HeapElement = HeapArray | HeapObject | HeapFunction;
 
-interface HeapArray {
+export interface HeapArray {
   kind: "array";
   id: string;
-  values: (PrimitiveValue | PointerValue)[];
+  values: Value[];
 }
 
-interface HeapObject {
+export interface HeapObject {
   kind: "object";
   id: string;
-  entries: { key: string; value: PrimitiveValue | PointerValue }[];
+  entries: ObjectEntry[];
 }
 
-interface HeapFunction {
+export interface ObjectEntry {
+  key: string;
+  value: Value;
+}
+
+export interface HeapFunction {
   kind: "function";
   id: string;
   name: string;
@@ -100,4 +115,8 @@ interface NullValue {
 
 interface UndefinedValue {
   kind: "undefined";
+}
+
+export default interface TraceModule {
+  convertTrace(pyTutorTrace: any): Trace;
 }

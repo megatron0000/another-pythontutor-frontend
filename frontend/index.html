@@ -1,24 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>APYF</title>
+    <title>Another Pythontutor Frontend</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="css-reset.css" />
-    <link rel="stylesheet" href="view.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="stylesheet" href="/css/css-reset.css" />
+    <link rel="stylesheet" href="/css/view.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/buttons.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+    />
   </head>
   <body>
     <main>
-      <section id="page_edit">
-        <div
-          id="monaco-container"
-          style="width: 100%; height: 80vh; border: 1px solid grey;"
-        ></div>
+      <section id="edit">
+        <div class="navigation-menu">
+          <button class="button" id="visualize-execution-button">
+            Visualize Execution
+          </button>
+        </div>
+        <div id="monaco-container"></div>
       </section>
-      <section id="page_visualize">
-        <div id="d3-container"></div>
+      <section id="visualize">
+        <div class="navigation-menu">
+          <button class="button" id="button-prev">Prev</button>
+          <button class="button" id="button-next">Next</button>
+          <div style="display: inline-flex">
+            <div style="margin: 5px">
+              <svg width="18px" height="10px" style="display: inline">
+                <polygon
+                  points="0,3 12,3 12,0 18,5 12,10 12,7 0,7"
+                  fill="rgba(100, 200, 100, 0.5)"
+                ></polygon>
+              </svg>
+              <span>Line that just executed</span>
+            </div>
+            <div style="margin: 5px">
+              <svg width="18px" height="10px" style="display: inline">
+                <polygon
+                  points="0,3 12,3 12,0 18,5 12,10 12,7 0,7"
+                  fill="rgba(100, 200, 100, 1.0)"
+                ></polygon>
+              </svg>
+              <span>Line that will be executed in the next step</span>
+            </div>
+          </div>
+
+          <button class="button float-right" id="button-edit">Edit code</button>
+        </div>
+        <div class="zoom-container">
+          <div class="visualizer__container grid">
+            <div class="visualizer__context__container grid__col1"></div>
+            <div class="visualizer__heap__container grid__col2"></div>
+          </div>
+        </div>
+        <div class="console-window-container"></div>
       </section>
     </main>
 
@@ -28,6 +67,13 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script src="src/script.js"></script>
+
+    <script>
+      // hack while https://github.com/microsoft/TypeScript/issues/47470#issuecomment-1017968198
+      // is not resolved
+      const exports = {};
+    </script>
+
+    <script src="/build/index.js"></script>
   </body>
 </html>
