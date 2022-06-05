@@ -233,6 +233,7 @@
   text-align: right;
   background-color: #faebbf;
   border-bottom: 1px #888 solid;
+  white-space: nowrap;
 }
 
 .heap__element__object__value {
@@ -299,6 +300,7 @@
   padding-right: 8px;
   padding-top: 3px;
   padding-bottom: 3px;
+  white-space: nowrap;
 }
 
 .stack__frame__body__variable__value {
