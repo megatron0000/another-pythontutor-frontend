@@ -79,6 +79,15 @@ define(["d3/d3.v7", "./diff"], function (
         .forEach(recurse);
     });
 
+    // fix: stack frame may have a return value
+    const activeStackFrame = step.stack_frames.slice(-1)[0];
+    if (
+      activeStackFrame !== undefined &&
+      activeStackFrame.return_value?.kind === "pointer"
+    ) {
+      recurse(activeStackFrame.return_value);
+    }
+
     // remove IDs from the previous step that are no longer present in this step
     return rows.filter(id => currentStepIDs.has(id));
   }
@@ -119,6 +128,17 @@ define(["d3/d3.v7", "./diff"], function (
         }
 
         pointer2View.set(value, frameView.getAnchorOut(identifier));
+      }
+
+      // fix: stack frame may have a return value
+      if (
+        frame.return_value !== undefined &&
+        frame.return_value.kind === "pointer"
+      ) {
+        pointer2View.set(
+          frame.return_value,
+          frameView.getAnchorOut("Return Value") // TODO: fix magic string (must be the same as view.ts)
+        );
       }
     });
 
@@ -184,6 +204,15 @@ define(["d3/d3.v7", "./diff"], function (
         .filter(isPointer)
         .forEach(recurse);
     });
+
+    // fix: stack frame may have a return value
+    const activeStackFrame = step.stack_frames.slice(-1)[0];
+    if (
+      activeStackFrame !== undefined &&
+      activeStackFrame.return_value?.kind === "pointer"
+    ) {
+      recurse(activeStackFrame.return_value);
+    }
 
     return edges;
   }
