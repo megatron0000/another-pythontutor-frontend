@@ -348,6 +348,7 @@
 .anchor__in {
   position: absolute;
   height: 100%;
+  left: -2pt;
 }
 
 .heap__element.array .anchor__in {
@@ -359,7 +360,7 @@
 }
 
 .heap__element.function .anchor__in {
-  width: 32pt;
+  width: 1pt;
 }
 
 .anchor__out {
