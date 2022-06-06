@@ -13,14 +13,14 @@ interface ViewKinds {
 
 export interface View {
   node(): HTMLElement;
-  readonly width: number;
-  readonly height: number;
+  width(): number;
+  height(): number;
   is<T extends keyof ViewKinds>(kind: T): this is ViewKinds[T];
 }
 
 export interface AnchorView extends View {
-  readonly offsetLeft: number;
-  readonly offsetTop: number;
+  offsetLeft(): number;
+  offsetTop(): number;
   parent(): View;
 }
 

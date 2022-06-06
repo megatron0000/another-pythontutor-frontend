@@ -812,11 +812,11 @@ define(["d3/d3.v7", "ace/ace"], function (
     }
 
     return {
-      get offsetLeft() {
+      offsetLeft() {
         return getDimension("left");
       },
 
-      get offsetTop() {
+      offsetTop() {
         return getDimension("top");
       }
     };
@@ -970,11 +970,11 @@ define(["d3/d3.v7", "ace/ace"], function (
         return node;
       },
 
-      get width() {
+      width() {
         return getDimension(node, "width");
       },
 
-      get height() {
+      height() {
         return getDimension(node, "height");
       }
     };

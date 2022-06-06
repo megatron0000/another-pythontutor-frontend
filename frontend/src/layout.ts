@@ -235,7 +235,7 @@ define(["d3/d3.v7", "./diff"], function (
       const view = heapRows[i];
       const prevView = heapRows[i - 1];
       coordinates.get(view)![1] =
-        coordinates.get(prevView)![1] + prevView.height + verticalMargin;
+        coordinates.get(prevView)![1] + prevView.height() + verticalMargin;
     }
 
     /**
@@ -269,7 +269,7 @@ define(["d3/d3.v7", "./diff"], function (
           coordinates.get(target)![0] = Math.max(
             coordinates.get(target)![0],
             coordinates.get(source)![0] +
-              sourceOut.offsetLeft +
+              sourceOut.offsetLeft() +
               horizontalMargin
           );
 
