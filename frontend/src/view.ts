@@ -211,24 +211,11 @@ define(["d3/d3.v7", "ace/ace"], function (
         throw new Error("tried to rerender an object with array data");
       }
 
-      // https://stackoverflow.com/questions/23409250/compare-diff-new-data-with-previous-data-on-d3-js-update
-      const previousData = d3.local<ObjectEntry>();
-
       key2anchorOut.clear();
 
       const updatedObjectRows = objectTable
         .selectAll<HTMLTableRowElement, ObjectEntry>("tr")
-        .data(newData.entries, (datum: ObjectEntry) => datum.key)
-        .filter(function (datum) {
-          // filter out old pointers that still are pointers (to avoid deleting the anchor_out)
-          if (
-            previousData.get(this)?.value.kind === "pointer" &&
-            datum.value.kind === "pointer"
-          ) {
-            return false;
-          }
-          return true;
-        });
+        .data(newData.entries, datum => datum.key);
 
       updatedObjectRows.exit().remove();
       updatedObjectRows.html(null); // https://stackoverflow.com/questions/14422198/how-do-i-remove-all-children-elements-from-a-node-and-then-apply-them-again-with/43661877#43661877
@@ -237,10 +224,6 @@ define(["d3/d3.v7", "ace/ace"], function (
         .enter()
         .append("tr")
         .merge(updatedObjectRows); // https://stackoverflow.com/questions/48178618/d3-v4-merge-enter-and-update-selections-to-remove-duplicate-code
-
-      allObjectRows.each(function (datum) {
-        previousData.set(this, datum);
-      });
 
       allObjectRows
         .append("td")
