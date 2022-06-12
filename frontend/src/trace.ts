@@ -43,7 +43,8 @@ define([], function (): TraceModule {
           line,
           col,
           event,
-          heap: pyHeap
+          heap: pyHeap,
+          exception_msg: pyExceptionMsg
         } = pyStep;
 
         const stack_frames: StackFrame[] = pyStack.map((pyFrame: any) => {
@@ -162,7 +163,8 @@ define([], function (): TraceModule {
           line,
           col,
           event,
-          heap
+          heap,
+          exception_message: event === "exception" ? pyExceptionMsg : undefined
         };
 
         return step;

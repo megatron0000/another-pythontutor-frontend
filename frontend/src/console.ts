@@ -97,9 +97,11 @@ define(["jsframe", "d3/d3.v7"], function (
     );
 
     return {
-      rerender(stdout: Stdout) {
+      rerender(stdout: Stdout, stderr?: string) {
         const updateSelection = contentArea
-          .selectAll<HTMLDivElement, Stdout[number]>("div.console__line")
+          .selectAll<HTMLDivElement, Stdout[number]>(
+            "div.console__line:not(.error)"
+          )
           .data(stdout);
 
         updateSelection.exit().remove();
@@ -121,6 +123,27 @@ define(["jsframe", "d3/d3.v7"], function (
           .append("div")
           .classed("console__line__linenumber", true)
           .text(datum => `:${datum.line}`);
+
+        const errorAllSelection = contentArea
+          .selectAll<HTMLDivElement, string>("div.console__line.error")
+          .data(stderr === undefined ? [] : [stderr]);
+
+        errorAllSelection.exit().remove();
+
+        const errorUpdateSelection = errorAllSelection
+          .enter()
+          .append("div")
+          .classed("console__line error", true)
+          .merge(errorAllSelection);
+
+        errorUpdateSelection
+          .append("div")
+          .classed("console__line__content", true)
+          .text(datum => datum);
+
+        errorUpdateSelection
+          .append("div")
+          .classed("console__line__linenumber", true);
       }
     };
   }

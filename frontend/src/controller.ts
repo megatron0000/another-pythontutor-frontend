@@ -308,7 +308,7 @@ define(["./parser", "./layout", "./view", "./diff", "./console"], function (
 
         connectionRouter.rerender(connections);
 
-        consoleView.rerender(step.stdout);
+        consoleView.rerender(step.stdout, step.exception_message);
       }
 
       let index = -1;

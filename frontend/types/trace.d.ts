@@ -16,6 +16,7 @@ export interface Step {
   event: Event;
   stack_frames: StackFrame[]; // the first frame is the global scope, with id=0
   heap: Record<HeapElementId, HeapElement>;
+  exception_message?: string; // string only if Step.event === "exception"
 }
 
 export type Stdout = { content: string; line: number }[];

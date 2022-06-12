@@ -5,7 +5,7 @@
 import { Stdout } from "./trace";
 
 export interface Console {
-  rerender(stdout: Stdout): void;
+  rerender(stdout: Stdout, stderr?: string): void;
 }
 
 export default interface ConsoleModule {
