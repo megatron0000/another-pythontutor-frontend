@@ -157,7 +157,7 @@ require([
       );
       pyTrace = await response.json();
     } catch (err) {
-      alert("Unknown error");
+      alert("Unknown error.\nTry reloading the page.");
       buttonVisualize.disabled = false;
       buttonVisualize.textContent = textBackup;
       return;
