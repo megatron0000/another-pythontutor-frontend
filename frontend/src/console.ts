@@ -1,154 +1,145 @@
-type D3 = typeof import("d3");
-import ConsoleModule from "../types/console";
 import { Stdout } from "../types/trace";
+import { JSFrame } from "jsframe.js";
+import * as d3 from "d3";
 
-define(["jsframe", "d3/d3.v7"], function (
-  { JSFrame }: { JSFrame: any },
-  d3: D3
-): ConsoleModule {
-  function createConsole(container: HTMLElement) {
-    const jsFrame = new JSFrame();
-    const frame = jsFrame
-      .create({
-        // does not work because the jsframe lib has a bug
-        // parentElement: container,
-        title: "Console",
-        appearanceName: "material",
-        appearanceParam: {
-          border: {
-            shadow: "rgba(0, 0, 0, 0.8) 0px 5px 15px"
-          },
-          titleBar: {
-            color: "white",
-            background: "#4784d4",
-            leftMargin: 10,
-            height: 30,
-            fontSize: 13.333,
-            buttonWidth: 36,
-            buttonHeight: 16,
-            buttonColor: "white",
-            buttons: []
-          }
+export function createConsole(container: HTMLElement) {
+  const jsFrame = new JSFrame();
+  const frame = jsFrame
+    .create({
+      // does not work because the jsframe lib has a bug
+      // parentElement: container,
+      title: "Console",
+      appearanceName: "material",
+      appearanceParam: {
+        border: {
+          shadow: "rgba(0, 0, 0, 0.8) 0px 5px 15px"
         },
-        style: {
-          overflow: "auto"
-        },
-        width: 320,
-        height: 80,
-        top: 60,
-        left: window.innerWidth - 340,
-        html: `
-          <div class="console-content-container"></div>
-        `
-      })
-      .show();
+        titleBar: {
+          color: "white",
+          background: "#4784d4",
+          leftMargin: 10,
+          height: 30,
+          fontSize: 13.333,
+          buttonWidth: 36,
+          buttonHeight: 16,
+          buttonColor: "white",
+          buttons: []
+        }
+      },
+      style: {
+        overflow: "auto"
+      },
+      width: 320,
+      height: 80,
+      top: 60,
+      left: window.innerWidth - 340,
+      html: `
+        <div class="console-content-container"></div>
+      `
+    })
+    .show();
 
-    // frame.htmlElement.style.overflow = "hidden";
+  // frame.htmlElement.style.overflow = "hidden";
 
-    frame.setControl({
-      minimizeButton: "minimizeButton",
-      deminimizeButton: "deminimizeButton",
-      animation: true,
-      animationDuration: 100
-    });
+  frame.setControl({
+    minimizeButton: "minimizeButton",
+    deminimizeButton: "deminimizeButton",
+    animation: true,
+    animationDuration: 100
+  });
 
-    /**
-     * Fixes are no longer necessary becaused I turned off the buttons (no buttons anymore...)
-     */
-    // fix: jsframelib has a bug where the `on` method assigns
-    // the callback function as a listener named "frame-component-listener".
-    // But there may be only 1 listener with such a name (and the lib comes
-    // with a default listener). So we remove the default listener before
-    // inserting our own listener
-    // frame.eventListenerHelper.clearEventListener(
-    //   frame.getFrameComponentElement("minimizeButton"),
-    //   "click",
-    //   "frame-component-listener"
-    // );
-    // frame.on("minimizeButton", "click", (_frame, evt) => {
-    //   _frame.control.doMinimize();
-    // });
+  /**
+   * Fixes are no longer necessary becaused I turned off the buttons (no buttons anymore...)
+   */
+  // fix: jsframelib has a bug where the `on` method assigns
+  // the callback function as a listener named "frame-component-listener".
+  // But there may be only 1 listener with such a name (and the lib comes
+  // with a default listener). So we remove the default listener before
+  // inserting our own listener
+  // frame.eventListenerHelper.clearEventListener(
+  //   frame.getFrameComponentElement("minimizeButton"),
+  //   "click",
+  //   "frame-component-listener"
+  // );
+  // frame.on("minimizeButton", "click", (_frame, evt) => {
+  //   _frame.control.doMinimize();
+  // });
 
-    // frame.eventListenerHelper.clearEventListener(
-    //   frame.getFrameComponentElement("deminimizeButton"),
-    //   "click",
-    //   "frame-component-listener"
-    // );
-    // frame.on("deminimizeButton", "click", (_frame, evt) => {
-    //   _frame.control.doDeminimize();
-    // });
+  // frame.eventListenerHelper.clearEventListener(
+  //   frame.getFrameComponentElement("deminimizeButton"),
+  //   "click",
+  //   "frame-component-listener"
+  // );
+  // frame.on("deminimizeButton", "click", (_frame, evt) => {
+  //   _frame.control.doDeminimize();
+  // });
 
-    // fix: the `parentElement` option does not work (library bug!) so
-    // we hack away, using an internal property ".parentCanvas.parentElement"
-    // to capture the element and put it under the intended container
-    container.appendChild(frame.parentCanvas.parentElement);
+  // fix: the `parentElement` option does not work (library bug!) so
+  // we hack away, using an internal property ".parentCanvas.parentElement"
+  // to capture the element and put it under the intended container
+  container.appendChild(frame.parentCanvas.parentElement);
 
-    /**
-     * Not needed anymore because we do not allow minimizing the console window
-     */
-    // // fix: jsframe lib has a bug where the content of the window
-    // // does not minimize when the window minimized. This
-    // // fixes the issue, although it is a hack
-    // document.querySelector(".console-content-container")!.parentElement!.style.overflow =
-    //   "hidden";
+  /**
+   * Not needed anymore because we do not allow minimizing the console window
+   */
+  // // fix: jsframe lib has a bug where the content of the window
+  // // does not minimize when the window minimized. This
+  // // fixes the issue, although it is a hack
+  // document.querySelector(".console-content-container")!.parentElement!.style.overflow =
+  //   "hidden";
 
-    const contentArea = d3.select<HTMLElement, unknown>(
-      ".console-content-container"
-    );
-
-    return {
-      rerender(stdout: Stdout, stderr?: string) {
-        const updateSelection = contentArea
-          .selectAll<HTMLDivElement, Stdout[number]>(
-            "div.console__line:not(.error)"
-          )
-          .data(stdout);
-
-        updateSelection.exit().remove();
-        // remove and recreate because it is easier this way
-        updateSelection.html(null); // https://stackoverflow.com/questions/14422198/how-do-i-remove-all-children-elements-from-a-node-and-then-apply-them-again-with/43661877#43661877
-
-        const allSelection = updateSelection
-          .enter()
-          .append("div")
-          .classed("console__line", true)
-          .merge(updateSelection);
-
-        allSelection
-          .append("div")
-          .classed("console__line__content", true)
-          .text(datum => datum.content);
-
-        allSelection
-          .append("div")
-          .classed("console__line__linenumber", true)
-          .text(datum => `:${datum.line}`);
-
-        const errorAllSelection = contentArea
-          .selectAll<HTMLDivElement, string>("div.console__line.error")
-          .data(stderr === undefined ? [] : [stderr]);
-
-        errorAllSelection.exit().remove();
-
-        const errorUpdateSelection = errorAllSelection
-          .enter()
-          .append("div")
-          .classed("console__line error", true)
-          .merge(errorAllSelection);
-
-        errorUpdateSelection
-          .append("div")
-          .classed("console__line__content", true)
-          .text(datum => datum);
-
-        errorUpdateSelection
-          .append("div")
-          .classed("console__line__linenumber", true);
-      }
-    };
-  }
+  const contentArea = d3.select<HTMLElement, unknown>(
+    ".console-content-container"
+  );
 
   return {
-    createConsole
+    rerender(stdout: Stdout, stderr?: string) {
+      const updateSelection = contentArea
+        .selectAll<HTMLDivElement, Stdout[number]>(
+          "div.console__line:not(.error)"
+        )
+        .data(stdout);
+
+      updateSelection.exit().remove();
+      // remove and recreate because it is easier this way
+      updateSelection.html(null); // https://stackoverflow.com/questions/14422198/how-do-i-remove-all-children-elements-from-a-node-and-then-apply-them-again-with/43661877#43661877
+
+      const allSelection = updateSelection
+        .enter()
+        .append("div")
+        .classed("console__line", true)
+        .merge(updateSelection);
+
+      allSelection
+        .append("div")
+        .classed("console__line__content", true)
+        .text(datum => datum.content);
+
+      allSelection
+        .append("div")
+        .classed("console__line__linenumber", true)
+        .text(datum => `:${datum.line}`);
+
+      const errorAllSelection = contentArea
+        .selectAll<HTMLDivElement, string>("div.console__line.error")
+        .data(stderr === undefined ? [] : [stderr]);
+
+      errorAllSelection.exit().remove();
+
+      const errorUpdateSelection = errorAllSelection
+        .enter()
+        .append("div")
+        .classed("console__line error", true)
+        .merge(errorAllSelection);
+
+      errorUpdateSelection
+        .append("div")
+        .classed("console__line__content", true)
+        .text(datum => datum);
+
+      errorUpdateSelection
+        .append("div")
+        .classed("console__line__linenumber", true);
+    }
   };
-});
+}
