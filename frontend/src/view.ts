@@ -611,8 +611,8 @@ class CodeAreaController {
       .duration(kind === "current" ? 400 : 0) // only animate the current-line arrow
       .style(
         "top",
-        // 16px is the line height, and 3px was manually tested to center the arrow vertically
-          `${(offsetLineNumber - 1) * 16 + 3}px`
+        // 3px was manually tested to center the arrow vertically
+        `${(offsetLineNumber - 1) * this._editor.renderer.lineHeight + 3}px`
       );
 
     const marker =
