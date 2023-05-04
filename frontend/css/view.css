@@ -65,7 +65,8 @@
 
 #monaco-container {
   height: 100%;
-  top: 10px;
+  /* fix: the code area must not get visibly cut above by the top header */
+  top: 2px;
   position: relative;
 }
 
