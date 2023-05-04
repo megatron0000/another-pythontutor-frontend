@@ -303,7 +303,11 @@ class ContextLayouterImplementation implements ContextLayouter {
 
     this._insertionPoint.appendChild(wrapper);
     this._insertionPointList.push(this._insertionPoint);
-    this._insertionPoint = newInsertionPoint;
+    // FIXME: commenting or uncommenting the following line
+    // changes the stack-frame layout mode from horizontal
+    // to vertical. This should be made into a setting
+    // that can be customized at runtime
+    // this._insertionPoint = newInsertionPoint;
     this._frameIdList.push(stackFrameId);
   }
 
