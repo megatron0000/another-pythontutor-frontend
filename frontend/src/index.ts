@@ -3,8 +3,8 @@
  * (#edit and #visualize)
  */
 
-import { Trace } from "../types/trace";
-import { VisualizationController } from "../types/controller";
+import type { Trace } from "./trace/types";
+import type { VisualizationController } from "./controller/types";
 
 import * as jsplumb from "@jsplumb/browser-ui";
 
@@ -12,10 +12,14 @@ import * as d3 from "d3";
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
-import { lint } from "./linter";
+import { lint } from "./linter/linter";
 
-import { convertTrace } from "./trace";
-import { createVisualizationController } from "./controller";
+import { Interpreter } from "JS-Interpreter";
+
+console.log(Interpreter);
+
+import { convertTrace } from "./trace/trace";
+import { createVisualizationController } from "./controller/controller";
 
 /**
  * 1: objects in the #visualize page
