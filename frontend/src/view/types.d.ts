@@ -2,7 +2,12 @@
  * View is any element inside the visualization (except the console window)
  */
 
-import { HeapArray, HeapElement, HeapObject, StackFrame } from "./trace";
+import type {
+  HeapArray,
+  HeapElement,
+  HeapObject,
+  StackFrame
+} from "../trace/types";
 
 interface ViewKinds {
   anchor: AnchorView;

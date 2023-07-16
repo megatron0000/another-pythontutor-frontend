@@ -15,22 +15,22 @@ import "ace-builds/webpack-resolver";
 
 import * as d3 from "d3";
 
-import {
+import type {
   HeapArray,
   HeapObject,
   Identifier,
   ObjectEntry,
   StackFrame,
   Value
-} from "../types/trace";
+} from "../trace/types";
 
-import {
+import type {
   CodeAreaView,
   StackFrameView,
   AnchorView,
   HeapElementView,
   View
-} from "../types/view";
+} from "./types";
 
 export function createShallowArrayView(arrayData: HeapArray): HeapElementView {
   const key2anchorOut: Map<number, HTMLElement> = new Map();

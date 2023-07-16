@@ -4,8 +4,8 @@
  * bounds
  */
 
-import { Program } from "estree";
-import { FunctionInfo, ParsedCode, Range } from "../types/parser";
+import type { Program } from "estree";
+import type { FunctionInfo, ParsedCode, Range } from "./types";
 import * as acorn from "acorn";
 
 class ParsedCodeImplementation implements ParsedCode {

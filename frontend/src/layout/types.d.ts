@@ -7,14 +7,14 @@
  */
 
 import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
-import { Step, HeapElementId, StackFrameId } from "./trace";
-import {
+import type { Step, HeapElementId, StackFrameId } from "../trace/types";
+import type {
   AnchorView,
   CodeAreaView,
   HeapElementView,
   StackFrameView,
   View
-} from "./view";
+} from "../view/types";
 
 export interface ContextLayouter {
   /**

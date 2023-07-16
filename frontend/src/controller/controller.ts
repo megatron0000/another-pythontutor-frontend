@@ -1,11 +1,11 @@
 import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
-import { HeapElementId, StackFrameId, Trace } from "../types/trace";
-import {
+import type { HeapElementId, StackFrameId, Trace } from "../trace/types";
+import type {
   CodeAreaView,
   HeapElementView,
   StackFrameView,
   View
-} from "../types/view";
+} from "../view/types";
 
 import {
   calculateHeapRows,
@@ -13,7 +13,7 @@ import {
   createConnectionRouter,
   calculateHeapCoordinates,
   calculateConnections
-} from "./layout";
+} from "../layout/layout";
 
 import {
   createCodeAreaView,
@@ -21,13 +21,13 @@ import {
   createShallowArrayView,
   createShallowObjectView,
   createShallowStackFrameView
-} from "./view";
+} from "../view/view";
 
-import { diffHeap, diffStack } from "./diff";
+import { diffHeap, diffStack } from "../diff/diff";
 
-import { createConsole } from "./console";
+import { createConsole } from "../console/console";
 
-import { parseCode } from "./parser";
+import { parseCode } from "../parser/parser";
 
 export function createVisualizationController(
   trace: Trace,

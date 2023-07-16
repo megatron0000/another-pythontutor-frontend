@@ -4,7 +4,7 @@
  */
 
 import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
-import { Trace } from "./trace";
+import { Trace } from "../trace/types";
 
 export interface VisualizationController {
   advanceStep: () => void;

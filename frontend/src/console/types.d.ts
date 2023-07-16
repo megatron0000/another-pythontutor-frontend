@@ -2,7 +2,7 @@
  * Implementation of the console window inside the visualization
  */
 
-import { Stdout } from "./trace";
+import type { Stdout } from "../trace/types";
 
 export interface Console {
   rerender(stdout: Stdout, stderr?: string): void;

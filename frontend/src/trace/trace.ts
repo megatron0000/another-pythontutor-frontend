@@ -16,7 +16,7 @@
  * types in this file
  */
 
-import {
+import type {
   HeapElement,
   HeapElementId,
   Identifier,
@@ -25,7 +25,7 @@ import {
   Step,
   Trace,
   Value
-} from "../types/trace";
+} from "./types";
 
 export function convertTrace(pyTutorTrace: any): Trace {
   const { trace: pySteps, code } = pyTutorTrace;

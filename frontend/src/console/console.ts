@@ -1,4 +1,4 @@
-import { Stdout } from "../types/trace";
+import type { Stdout } from "../trace/types";
 import { JSFrame } from "jsframe.js";
 import * as d3 from "d3";
 

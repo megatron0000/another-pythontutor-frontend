@@ -1,22 +1,23 @@
 import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
-import { Connection, ConnectionRouter, ContextLayouter } from "../types/layout";
+import type { Connection, ConnectionRouter, ContextLayouter } from "./types";
 
-import {
+import type {
   HeapElementId,
   PointerValue,
   StackFrameId,
   Step,
   Value
-} from "../types/trace";
-import {
+} from "../trace/types";
+
+import type {
   AnchorView,
   CodeAreaView,
   HeapElementView,
   StackFrameView,
   View
-} from "../types/view";
+} from "../view/types";
 
-import { diffConnections } from "./diff";
+import { diffConnections } from "../diff/diff";
 
 function isPointer(value: Value): value is PointerValue {
   return value.kind === "pointer";
