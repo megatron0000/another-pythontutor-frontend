@@ -1,0 +1,4 @@
+[submodule "frontend/vendor/JS-Interpreter"]
+	path = frontend/vendor/JS-Interpreter
+	url = https://github.com/NeilFraser/JS-Interpreter
+	commit = 95241033141b88d887787dda936091ff7529ef71
