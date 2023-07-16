@@ -28,6 +28,8 @@
     "@jsplumb/browser-ui": "^5.12.0",
     "ace-builds": "^1.11.2",
     "d3": "^7.6.1",
+    "eslint-linter-browserify": "^8.45.0",
+    "eslint-plugin-es5": "^1.5.0",
     "jsframe.js": "^1.6.2",
     "monaco-editor": "^0.34.0"
   }

@@ -34,8 +34,9 @@ module.exports = {
     path: path.resolve(__dirname, "build")
   },
   plugins: [
-    // https://www.npmjs.com/package/monaco-editor-webpack-plugin
-    new MonacoWebpackPlugin()
+    new MonacoWebpackPlugin({
+      languages: ["javascript"]
+    })
   ],
   cache: {
     type: "filesystem"
@@ -45,5 +46,5 @@ module.exports = {
     // Avoid minimization because TerserPlugin (uglifier) is slow
     // https://github.com/webpack-contrib/terser-webpack-plugin/issues/217
     minimize: false
-  },
+  }
 };

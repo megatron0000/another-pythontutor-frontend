@@ -11,6 +11,9 @@ import * as jsplumb from "@jsplumb/browser-ui";
 import * as d3 from "d3";
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+
+import { lint } from "./linter";
+
 import { convertTrace } from "./trace";
 import { createVisualizationController } from "./controller";
 
@@ -89,6 +92,26 @@ function createMonacoEditor(containerId: string) {
   editor.onDidChangeModelContent(e => {
     localStorage.setItem("code", editor.getValue());
   });
+
+  async function lintAndMark() {
+    const code = editor.getValue();
+    const lintResult = await lint(code);
+    const markers = lintResult.map(function (message) {
+      return {
+        severity: monaco.MarkerSeverity.Error,
+        startLineNumber: message.line,
+        startColumn: message.column,
+        endLineNumber: message.endLine!,
+        endColumn: message.endColumn!,
+        message: message.message
+      };
+    });
+
+    monaco.editor.setModelMarkers(editor.getModel()!, "eslint", markers);
+  }
+
+  lintAndMark();
+  editor.onDidChangeModelContent(lintAndMark);
 
   return editor;
 }
