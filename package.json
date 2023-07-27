@@ -9,9 +9,10 @@
   },
   "scripts": {
     "watch-backend": "nodemon --ignore 'frontend/*' -e js index.js",
-    "watch-frontend": "cd frontend/ && npx webpack --watch --progress",
+    "watch-frontend": "cd frontend/ && npx webpack --watch --progress --config webpack.config.dev.js",
     "start": "concurrently \"npm:watch*\"",
-    "build": "cd frontend/ && tsc"
+    "build": "cd frontend/ && tsc",
+    "build-prod": "cd frontend/ && npx webpack --config webpack.config.prod.js"
   },
   "devDependencies": {
     "concurrently": "^7.2.1",

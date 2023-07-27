@@ -86,7 +86,7 @@ export type StepKind =
   | { kind: "end" }
   | { kind: "uncaught exception"; exception: unknown };
 
-type StepperInjectedFunction = (node: Node, ...rest: any[]) => any;
+export type StepperInjectedFunction = (node: Node, ...rest: any[]) => any;
 
 export class Stepper {
   /**
@@ -125,27 +125,29 @@ export class Stepper {
   /**
    * Constructs a Stepper from code
    */
-  constructor(code: string, functions?: StepperInjectedFunction[]);
+  constructor(code: string, functions?: [string, StepperInjectedFunction][]);
   /**
    * Constructs a Stepper from a serialized snapshot
    */
   constructor(
     serializedInternalState: SerializedInternalState,
     serializedInterpreter: SerializedInterpreter,
-    functions?: StepperInjectedFunction[]
+    functions?: [string, StepperInjectedFunction][]
   );
   constructor(
     codeOrSerializedInternalState: string | SerializedInternalState,
     serializedInterpreterOrFunctions?:
       | SerializedInterpreter
-      | StepperInjectedFunction[],
-    functions?: StepperInjectedFunction[]
+      | [string, StepperInjectedFunction][],
+    functions?: [string, StepperInjectedFunction][]
   ) {
     // first overload
     if (typeof codeOrSerializedInternalState === "string") {
       const code = codeOrSerializedInternalState;
-      const functions = (serializedInterpreterOrFunctions ||
-        []) as StepperInjectedFunction[];
+      const functions = (serializedInterpreterOrFunctions || []) as [
+        string,
+        StepperInjectedFunction
+      ][];
       this.interpreter = new Interpreter(code, (interpreter, globalObject) =>
         this.injectFunctions(functions, interpreter, globalObject)
       );
@@ -181,19 +183,19 @@ export class Stepper {
   }
 
   private injectFunctions(
-    functions: StepperInjectedFunction[],
+    functions: [string, StepperInjectedFunction][],
     interpreter: Interpreter,
     globalObject: Interpreter.Object
   ) {
-    functions.forEach(fn => {
-      if (!fn.name) {
+    functions.forEach(([name, fn]) => {
+      if (!name) {
         throw new Error("injectFunctions: functions must have a name");
       }
       const pseudoFn = interpreter.nativeToPseudo((...args: any[]) =>
         // call with current node and forwarded arguments
         fn(this.interpreter.getStateStack().slice(-1)[0].node, ...args)
       );
-      interpreter.setProperty(globalObject, fn.name, pseudoFn);
+      interpreter.setProperty(globalObject, name, pseudoFn);
     });
   }
 

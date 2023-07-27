@@ -38,15 +38,21 @@ export class VisualizationController {
   reset(code: string) {
     const self = this;
     this.interpreter = new Interpreter(code, [
-      function input(log): number {
-        const value = prompt("Digite um número:");
-        const valueAsNumber = Number(value);
-        return valueAsNumber;
-      },
-      function output(log, content: any) {
-        const serializedContent = inspect(content, { depth: 3 });
-        log(serializedContent);
-      }
+      [
+        "input",
+        function (log): number {
+          const value = prompt("Digite um número:");
+          const valueAsNumber = Number(value);
+          return valueAsNumber;
+        }
+      ],
+      [
+        "output",
+        function (log, content: any) {
+          const serializedContent = inspect(content, { depth: 3 });
+          log(serializedContent);
+        }
+      ]
     ]);
   }
 

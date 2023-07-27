@@ -25,7 +25,8 @@ import {
 import {
   Stepper,
   type SerializedInternalState,
-  type StepKind
+  type StepKind,
+  type StepperInjectedFunction
 } from "./stepper";
 
 // disable regexps
@@ -127,7 +128,7 @@ export class Interpreter {
    */
   constructor(
     code: string,
-    private functionsToInject?: InterpreterInjectedFunction[]
+    private functionsToInject?: [string, InterpreterInjectedFunction][]
   ) {
     this.sourceCode = code;
     this.stepper = new Stepper(
@@ -140,11 +141,13 @@ export class Interpreter {
     this.stepForward("micro");
   }
 
-  private wrapInjectedFunctions(functions?: InterpreterInjectedFunction[]) {
+  private wrapInjectedFunctions(
+    functions?: [string, InterpreterInjectedFunction][]
+  ): [string, StepperInjectedFunction][] {
     const self = this;
     return (
-      functions?.map(fn => {
-        if (!fn.name) {
+      functions?.map(([name, fn]) => {
+        if (!name) {
           throw new Error("wrapInjectedFunctions: functions must have a name");
         }
         const wrappedFunction = // signature offered by the stepper: Node and args passed from the interpreted code
@@ -162,7 +165,7 @@ export class Interpreter {
           value: fn.name,
           configurable: true
         });
-        return wrappedFunction;
+        return [name, wrappedFunction];
       }) || []
     );
   }
