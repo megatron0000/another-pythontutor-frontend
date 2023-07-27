@@ -7,7 +7,7 @@ import type {
   HeapElement,
   HeapObject,
   StackFrame
-} from "../trace/types";
+} from "../../trace/types";
 
 interface ViewKinds {
   anchor: AnchorView;
@@ -45,8 +45,8 @@ export interface HeapElementView extends View {
   rerender(newData: HeapElement): void;
 
   /**
-   * Called before the View is dragged. Can change the coordinates where it
-   * will be dragged to.
+   * Called before the View is dragged by the user (mouse).
+   * Can change the coordinates where it will be dragged to.
    *
    * @param callback changing the `dx` or `dy` props changes how much
    * the view will be moved
@@ -54,7 +54,7 @@ export interface HeapElementView extends View {
   onWillDrag(callback: (delta: { dx: number; dy: number }) => void): void;
 
   /**
-   * Called after the View is dragged to a new position
+   * Called after the View is dragged to a new position by the user (mouse)
    */
   onDragged(callback: (newPosition: { x: number; y: number }) => void): void;
 
@@ -78,6 +78,13 @@ export interface CodeAreaView extends View {
    * moves the arrow but does not activate the line background color
    */
   highlightPreviousLine(lineNumber: number): void;
+
+  highlightRange(
+    lineStart: number,
+    colStart: number,
+    lineEnd: number,
+    colEnd: number
+  ): void;
 }
 
 export default interface ViewModule {

@@ -5,7 +5,7 @@
 
 /**
  * Structure of this file:
- *  1. Functions named "create*View" create `View` instances (see view.d.ts) using lower-level factories
+ *  1. Functions named "create*View" create `View` instances (see types.d.ts) using lower-level factories
  *  2. Functions named "*_factory" create methods which can be used to build `View`s.
  */
 
@@ -22,7 +22,7 @@ import type {
   ObjectEntry,
   StackFrame,
   Value
-} from "../trace/types";
+} from "../../trace/types";
 
 import type {
   CodeAreaView,
@@ -346,7 +346,7 @@ export function createShallowStackFrameView(frame: StackFrame): StackFrameView {
 
   view.rerender = function rerender(newData: StackFrame) {
     // hack: treat return value as if it were another local variable
-    const RETURN_VALUE_NAME = "Return Value"; // TODO: fix magic string (must be the same as layout.ts)
+    const RETURN_VALUE_NAME = "return "; // TODO: fix magic string (must be the same as layout.ts)
 
     const newDataIdentifiers = newData.ordered_locals.concat(
       newData.return_value !== undefined ? RETURN_VALUE_NAME : []
@@ -408,7 +408,10 @@ export function createShallowStackFrameView(frame: StackFrame): StackFrameView {
 
 export function createCodeAreaView(
   code: string,
-  firstLineNumber: number
+  lineStart: number,
+  colStart: number,
+  lineEnd: number,
+  colEnd: number
 ): CodeAreaView {
   const container = d3
     .create("div")
@@ -425,7 +428,10 @@ export function createCodeAreaView(
   const codeAreaController = new CodeAreaController(
     node,
     code,
-    firstLineNumber
+    lineStart,
+    colStart,
+    lineEnd,
+    colEnd
   );
 
   return {
@@ -438,6 +444,14 @@ export function createCodeAreaView(
     },
     is(kind) {
       return kind === "code area";
+    },
+    highlightRange(
+      lineStart: number,
+      colStart: number,
+      lineEnd: number,
+      colEnd: number
+    ) {
+      codeAreaController.highlightRange(lineStart, colStart, lineEnd, colEnd);
     }
   };
 }
@@ -445,7 +459,10 @@ export function createCodeAreaView(
 class CodeAreaController {
   // @ts-ignore because _editor is definitely assigned in the constructor
   private _editor: ace.Ace.Editor;
-  private _firstLineNumber: number;
+  private _lineStart: number;
+  private _lineEnd: number;
+  private _colStart: number;
+  private _colEnd: number;
   private _code: string;
   private _node: HTMLElement;
   private _prevLineSVG = (() => {
@@ -478,11 +495,22 @@ class CodeAreaController {
   })();
   private _currentLineMarker: any = null;
   private _previousLineMarker: any = null;
+  private _rangeMarker: any = null;
 
-  constructor(node: HTMLElement, code: string, firstLineNumber: number) {
+  constructor(
+    node: HTMLElement,
+    code: string,
+    lineStart: number,
+    colStart: number,
+    lineEnd: number,
+    colEnd: number
+  ) {
     this._node = node;
     this._code = code;
-    this._firstLineNumber = firstLineNumber;
+    this._lineStart = lineStart;
+    this._colStart = colStart;
+    this._lineEnd = lineEnd;
+    this._colEnd = colEnd;
 
     insertTemporarily(this._node, () => this._setupEditor());
 
@@ -523,7 +551,7 @@ class CodeAreaController {
       fontSize: 14,
       theme: "ace/theme/chrome",
       mode: "ace/mode/javascript",
-      firstLineNumber: this._firstLineNumber,
+      firstLineNumber: this._lineStart,
       readOnly: true,
       maxLines: Infinity, // trick to make container height resize with editor content,
       showFoldWidgets: false,
@@ -599,7 +627,7 @@ class CodeAreaController {
     // fix: Since we use Ace to highlight the line, we must use the offset
     // (for example, if the starting line number is 10 and `lineNumber` is 12,
     // we must pass 3 into Ace)
-    const offsetLineNumber = lineNumber - this._firstLineNumber + 1;
+    const offsetLineNumber = lineNumber - this._lineStart + 1;
 
     const svg = kind === "current" ? this._currLineSVG : this._prevLineSVG;
     if (!svg.node()?.isConnected) {
@@ -667,6 +695,38 @@ class CodeAreaController {
     } else {
       this.highlightLine(lineNumber, "previous");
     }
+  }
+
+  highlightRange(
+    lineStart: number,
+    colStart: number,
+    lineEnd: number,
+    colEnd: number
+  ) {
+    if (this._rangeMarker !== null) {
+      this._editor?.session.removeMarker(this._rangeMarker);
+    }
+
+    // fix: Since we use Ace to highlight the line, we must use the offset
+    // (for example, if the starting line number is 10 and `lineNumber` is 12,
+    // we must pass 3 into Ace)
+    const offsetLineStart = lineStart - this._lineStart;
+    const offsetLineEnd = lineEnd - this._lineStart;
+    const offsetColStart =
+      lineStart === this._lineStart ? colStart - this._colStart : colStart;
+    const offsetColEnd =
+      lineEnd === this._lineStart ? colEnd - this._colStart : colEnd;
+
+    this._rangeMarker = this._editor?.session.addMarker(
+      new ace.Range(
+        offsetLineStart,
+        offsetColStart,
+        offsetLineEnd,
+        offsetColEnd
+      ),
+      "code__area__currentLine",
+      "text"
+    );
   }
 }
 
