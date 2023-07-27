@@ -1,0 +1,29 @@
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.justify-content-space-around {
+  justify-content: space-around;
+}
+
+.align-self-end {
+  align-self: flex-end;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.float-right {
+  float: right;
+}
+
+.margin-left-auto {
+  margin-left: auto;
+}

@@ -6,14 +6,12 @@
     <title>Interpretador javascript ES5</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="css/css-reset.css" />
-    <link rel="stylesheet" href="css/view.css" />
+    <link rel="stylesheet" href="css/navigation.css" />
+    <link rel="stylesheet" href="css/visualizer.css" />
     <link rel="stylesheet" href="css/editor.css" />
-    <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/buttons.css" />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-    />
+    <link rel="stylesheet" href="css/utils.css" />
+    <link rel="stylesheet" href="./vendor/fontawesome/css/all.min.css" />
   </head>
   <body>
     <main>
@@ -22,26 +20,36 @@
           <button class="button" id="visualize-execution-button" disabled>
             Carregando...
           </button>
+          <button class="button margin-left-auto button-help" title="ajuda">
+            <i class="fa-solid fa-question"></i>
+          </button>
         </div>
-        <div id="monaco-container"></div>
+        <div id="code-editor-container"></div>
       </section>
       <section id="visualize">
         <div class="navigation-menu">
           <button class="button" id="button-prev-micro">
-            <i class="fa fa-step-backward" aria-hidden="true"></i>&nbsp;micro
+            <i class="fa fa-step-backward" title="micro-passo"></i>
           </button>
-          <button class="button" id="button-next-micro">
-            micro&nbsp;<i class="fa fa-step-forward" aria-hidden="true"></i>
+          <button class="button" id="button-next-micro" title="micro-passo">
+            <i class="fa fa-step-forward"></i>
           </button>
-          <button class="button" id="button-prev-macro">
-            <i class="fa fa-fast-backward" aria-hidden="true"></i>&nbsp;MACRO
+          <button class="button" id="button-prev-macro" title="macro-passo">
+            <i class="fa fa-fast-backward"></i>
           </button>
-          <button class="button" id="button-next-macro">
-            MACRO&nbsp;<i class="fa fa-fast-forward" aria-hidden="true"></i>
+          <button class="button" id="button-next-macro" title="macro-passo">
+            <i class="fa fa-fast-forward"></i>
+          </button>
+          <button class="button" id="button-run-all" title="executar tudo">
+            <i class="fa-solid fa-arrows-down-to-line"></i>
           </button>
 
-          <button class="button float-right" id="button-edit">
-            Editar código
+          <button class="button button-help" title="ajuda">
+            <i class="fa-solid fa-question"></i>
+          </button>
+
+          <button class="button" id="button-edit" title="editar código">
+            <i class="fa-solid fa-pen-to-square"></i>
           </button>
         </div>
         <div class="zoom-container">

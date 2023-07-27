@@ -1,0 +1,38 @@
+body {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+section:not(:target):not(#edit),
+section:target ~ #edit {
+  display: none;
+}
+
+main,
+#visualize,
+#edit {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.navigation-menu {
+  background-color: white;
+  padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 8px;
+  z-index: 20; /* to stay on top of the console window */
+  /* 
+    This is also to stay on top of the console window.
+    What happens is that the console window continer has a child with position:fixed;
+    Therefore it (the child) would be displayed on top of the navigation-menu
+    no matter the z-indexes (because positioned elements have
+    priority over unpositioned elements).
+    By setting a position on the navigation-menu, both (i) console window
+    and (ii) navigation-menu have a position attribute, so they are now
+    on "equal-footing" and who appears on top is controlled by z-index
+  */
+  position: relative;
+
+  display: flex;
+}

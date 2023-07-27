@@ -6,11 +6,7 @@
 import * as jsplumb from "@jsplumb/browser-ui";
 
 import { VisualizationController } from "./controller";
-import { lint } from "./linter";
-
-// https://github.com/ajaxorg/ace/issues/4782#issuecomment-1141347415
-import * as ace from "ace-builds";
-import "ace-builds/webpack-resolver";
+import { createEditor } from "./app/code-editor";
 
 /**
  * 1: objects in the #visualize page
@@ -81,77 +77,13 @@ const buttonVisualize = document.getElementById(
 // (for example, when user accesses "https://site.com/#visualize" directly)
 window.location.hash = "#edit";
 
-const editor = createEditor("monaco-container");
-
-function createEditor(containerId: string) {
-  const editor = ace.edit(containerId, {
-    fontSize: 15,
-    theme: "ace/theme/chrome",
-    mode: "ace/mode/javascript",
-    maxLines: Infinity, // trick to make container height resize with editor content,
-    value: localStorage.getItem("code") || "",
-    keyboardHandler: "ace/keyboard/vscode"
-  });
-
-  // disable syntax checking
-  editor.session.setOption("useWorker", false);
-
-  editor.session.on("change", () => {
-    localStorage.setItem("code", editor.getValue());
-    lintAndMark();
-  });
-
-  // `lintNumber` used to avoid race conditions because
-  // lintAndMark is async
-  let lintNumber = 0;
-  let previousMarkers: number[] = [];
-  lintAndMark();
-
-  async function lintAndMark() {
-    // remove markers
-    for (const previousMarker of previousMarkers) {
-      editor.session.removeMarker(previousMarker);
-    }
-
-    // lint
-    const code = editor.getValue();
-    let lintNumberBak = ++lintNumber;
-    const lintResult = await lint(code);
-    if (lintNumberBak !== lintNumber) {
-      return;
-    }
-
-    // show markers
-    previousMarkers = lintResult.map(message =>
-      editor.session.addMarker(
-        new ace.Range(
-          message.line - 1,
-          message.column - 1,
-          typeof message.endLine === "number"
-            ? message.endLine - 1
-            : message.line,
-          typeof message.endColumn === "number"
-            ? message.endColumn - 1
-            : message.column
-        ),
-        "error-marker",
-        "text",
-        true
-      )
-    );
-
-    editor.session.setAnnotations(
-      lintResult.map(message => ({
-        row: message.line! - 1,
-        column: message.column - 1,
-        text: message.message,
-        type: "error"
-      }))
-    );
+const editor = createEditor(
+  "code-editor-container",
+  localStorage.getItem("code") || "",
+  newCode => {
+    localStorage.setItem("code", newCode);
   }
-
-  return editor;
-}
+);
 
 buttonVisualize.addEventListener("click", async () => {
   // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),
