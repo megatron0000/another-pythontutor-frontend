@@ -3,23 +3,14 @@
  * (#edit and #visualize)
  */
 
-import type { Trace } from "./trace/types";
-import type { VisualizationController } from "./controller/types";
-
 import * as jsplumb from "@jsplumb/browser-ui";
 
-import * as d3 from "d3";
+import { VisualizationController } from "./controller";
+import { lint } from "./linter";
 
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-
-import { lint } from "./linter/linter";
-
-import { Interpreter } from "JS-Interpreter";
-
-console.log(Interpreter);
-
-import { convertTrace } from "./trace/trace";
-import { createVisualizationController } from "./controller/controller";
+// https://github.com/ajaxorg/ace/issues/4782#issuecomment-1141347415
+import * as ace from "ace-builds";
+import "ace-builds/webpack-resolver";
 
 /**
  * 1: objects in the #visualize page
@@ -29,8 +20,8 @@ const visualizerContainer = document.querySelector(
   ".visualizer__container"
 ) as HTMLElement;
 
-const contextContainer = document.querySelector(
-  ".visualizer__context__container"
+const stackContainer = document.querySelector(
+  ".visualizer__stack__container"
 ) as HTMLElement;
 
 const heapContainer = document.querySelector(
@@ -50,17 +41,29 @@ const jsplumbInstance = jsplumb.newInstance({
   elementsDraggable: true
 });
 
-const buttonPrev = document.getElementById("button-prev") as HTMLButtonElement;
-const buttonNext = document.getElementById("button-next") as HTMLButtonElement;
+const buttonPrevMicro = document.getElementById(
+  "button-prev-micro"
+) as HTMLButtonElement;
+const buttonNextMicro = document.getElementById(
+  "button-next-micro"
+) as HTMLButtonElement;
+const buttonPrevMacro = document.getElementById(
+  "button-prev-macro"
+) as HTMLButtonElement;
+const buttonNextMacro = document.getElementById(
+  "button-next-macro"
+) as HTMLButtonElement;
 const buttonEdit = document.getElementById("button-edit") as HTMLButtonElement;
 
-let controller: VisualizationController = {
-  advanceStep: () => {},
-  backwardStep: () => {},
-  destroy: () => {},
-  isFirstStep: () => true,
-  isLastStep: () => true
-};
+let controller = new VisualizationController(
+  "",
+  zoomContainer,
+  visualizerContainer,
+  stackContainer,
+  heapContainer,
+  consoleWindowContainer,
+  jsplumbInstance
+);
 
 /**
  * 2: objects in the #edit page
@@ -78,136 +81,137 @@ const buttonVisualize = document.getElementById(
 // (for example, when user accesses "https://site.com/#visualize" directly)
 window.location.hash = "#edit";
 
-const editor = createMonacoEditor("monaco-container");
+const editor = createEditor("monaco-container");
 
-// helper, used above
-function createMonacoEditor(containerId: string) {
-  const code = localStorage.getItem("code") || 'console.log("hello world")';
-
-  const editor = monaco.editor.create(document.getElementById(containerId)!, {
-    value: code,
-    language: "javascript",
-    automaticLayout: true,
-    minimap: {
-      enabled: false
-    }
+function createEditor(containerId: string) {
+  const editor = ace.edit(containerId, {
+    fontSize: 15,
+    theme: "ace/theme/chrome",
+    mode: "ace/mode/javascript",
+    maxLines: Infinity, // trick to make container height resize with editor content,
+    value: localStorage.getItem("code") || "",
+    keyboardHandler: "ace/keyboard/vscode"
   });
 
-  editor.onDidChangeModelContent(e => {
+  // disable syntax checking
+  editor.session.setOption("useWorker", false);
+
+  editor.session.on("change", () => {
     localStorage.setItem("code", editor.getValue());
+    lintAndMark();
   });
+
+  // `lintNumber` used to avoid race conditions because
+  // lintAndMark is async
+  let lintNumber = 0;
+  let previousMarkers: number[] = [];
+  lintAndMark();
 
   async function lintAndMark() {
+    // remove markers
+    for (const previousMarker of previousMarkers) {
+      editor.session.removeMarker(previousMarker);
+    }
+
+    // lint
     const code = editor.getValue();
+    let lintNumberBak = ++lintNumber;
     const lintResult = await lint(code);
-    const markers = lintResult.map(function (message) {
-      return {
-        severity: monaco.MarkerSeverity.Error,
-        startLineNumber: message.line,
-        startColumn: message.column,
-        endLineNumber: message.endLine!,
-        endColumn: message.endColumn!,
-        message: message.message
-      };
-    });
+    if (lintNumberBak !== lintNumber) {
+      return;
+    }
 
-    monaco.editor.setModelMarkers(editor.getModel()!, "eslint", markers);
+    // show markers
+    previousMarkers = lintResult.map(message =>
+      editor.session.addMarker(
+        new ace.Range(
+          message.line - 1,
+          message.column - 1,
+          typeof message.endLine === "number"
+            ? message.endLine - 1
+            : message.line,
+          typeof message.endColumn === "number"
+            ? message.endColumn - 1
+            : message.column
+        ),
+        "error-marker",
+        "text",
+        true
+      )
+    );
+
+    editor.session.setAnnotations(
+      lintResult.map(message => ({
+        row: message.line! - 1,
+        column: message.column - 1,
+        text: message.message,
+        type: "error"
+      }))
+    );
   }
-
-  lintAndMark();
-  editor.onDidChangeModelContent(lintAndMark);
 
   return editor;
 }
 
 buttonVisualize.addEventListener("click", async () => {
-  buttonVisualize.disabled = true;
-  const textBackup = buttonVisualize.textContent;
-  buttonVisualize.textContent = "Loading...";
-
-  let pyTrace = null;
-  try {
-    const response = await fetch(
-      // fix: use URLSearchParams to encode \n correctly
-      `/api/visualize?${new URLSearchParams({
-        code: editor.getValue()
-      })}`
-    );
-    pyTrace = await response.json();
-  } catch (err) {
-    alert("Unknown error.\nTry reloading the page.");
-    buttonVisualize.disabled = false;
-    buttonVisualize.textContent = textBackup;
-    return;
-  }
-
-  if (pyTrace.trace[0].event === "uncaught_exception") {
-    alert(
-      pyTrace.trace[0].exception_msg + "\n" + "on line " + pyTrace.trace[0].line
-    );
-
-    buttonVisualize.disabled = false;
-    buttonVisualize.textContent = textBackup;
-    return;
-  }
-
-  let trace: Trace = { programCode: "", steps: [] };
-  try {
-    trace = convertTrace(pyTrace);
-  } catch (err) {
-    alert("Error: " + err);
-  }
-
-  controller.destroy();
-  controller = createVisualizationController(
-    trace,
-    visualizerContainer,
-    contextContainer,
-    heapContainer,
-    consoleWindowContainer,
-    jsplumbInstance
-  );
-  visualizerContainer.style.transform = "";
-  buttonPrev.disabled = controller.isFirstStep();
-  buttonNext.disabled = controller.isLastStep();
-  buttonVisualize.disabled = false;
-  buttonVisualize.textContent = textBackup;
-
   // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),
-  // before the call to advanceStep().
+  // before building the controller
   // Otherwise, the controller is unable to calculate coordinates
   // (because the page has not been loaded) and the connection arrows
   // end up pointing to the wrong place (the origin)
   window.location.hash = "#visualize";
-  controller.advanceStep(); // display the first step
+
+  buttonVisualize.disabled = true;
+  buttonVisualize.textContent = "Carregando...";
+
+  controller.reset(editor.getValue());
+  controller.renderCurrentStep();
+  maybeDisableStepButtons();
+
+  buttonVisualize.disabled = false;
+  buttonVisualize.textContent = "Executar";
+  buttonVisualize.style.display = "none";
+  buttonEdit.style.display = "block";
 });
+
+/**
+ * Now that the page has loaded, enable the button
+ */
+buttonVisualize.disabled = false;
+buttonVisualize.textContent = "Executar";
 
 /**
  * 4: setup logic for #visualize page
  */
 
-buttonPrev.addEventListener("click", () => {
-  controller.backwardStep();
-  buttonPrev.disabled = controller.isFirstStep();
-  buttonNext.disabled = controller.isLastStep();
+function maybeDisableStepButtons() {
+  buttonPrevMicro.disabled = controller.isFirstStep();
+  buttonNextMicro.disabled = controller.isLastStep();
+  buttonPrevMacro.disabled = controller.isFirstStep();
+  buttonNextMacro.disabled = controller.isLastStep();
+}
+
+buttonPrevMicro.addEventListener("click", () => {
+  controller.backwardStep("micro");
+  maybeDisableStepButtons();
 });
 
-buttonNext.addEventListener("click", () => {
-  controller.advanceStep();
-  buttonPrev.disabled = controller.isFirstStep();
-  buttonNext.disabled = controller.isLastStep();
+buttonNextMicro.addEventListener("click", () => {
+  controller.advanceStep("micro");
+  maybeDisableStepButtons();
+});
+
+buttonPrevMacro.addEventListener("click", () => {
+  controller.backwardStep("macro");
+  maybeDisableStepButtons();
+});
+
+buttonNextMacro.addEventListener("click", () => {
+  controller.advanceStep("macro");
+  maybeDisableStepButtons();
 });
 
 buttonEdit.addEventListener("click", () => {
   window.location.hash = "#edit";
+  buttonVisualize.style.display = "block";
 });
-
-// zoom and drag the scene
-// https://stackoverflow.com/questions/43903487/how-to-apply-d3-zoom-to-a-html-element
-d3.select<HTMLElement, unknown>(zoomContainer).call(
-  d3.zoom<HTMLElement, unknown>().on("zoom", function (event) {
-    const transform = event.transform;
-    visualizerContainer.style.transform = `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`;
-    visualizerContainer.style.transformOrigin = "0 0";
-  })
-);
