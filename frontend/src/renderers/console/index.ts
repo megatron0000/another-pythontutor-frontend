@@ -1,8 +1,8 @@
-import type { Stdout } from "../trace/types";
+import type { Stdout } from "../../trace/types";
 import { JSFrame } from "jsframe.js";
 import * as d3 from "d3";
 
-export function createConsole(container: HTMLElement) {
+export function createConsoleLayouter(container: HTMLElement) {
   const jsFrame = new JSFrame();
   const frame = jsFrame
     .create({
@@ -140,6 +140,10 @@ export function createConsole(container: HTMLElement) {
       errorUpdateSelection
         .append("div")
         .classed("console__line__linenumber", true);
+    },
+
+    clear() {
+      container.innerHTML = "";
     }
   };
 }

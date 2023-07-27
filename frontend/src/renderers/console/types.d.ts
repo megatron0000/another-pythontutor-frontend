@@ -2,12 +2,14 @@
  * Implementation of the console window inside the visualization
  */
 
-import type { Stdout } from "../trace/types";
+import type { Stdout } from "../../trace/types";
 
-export interface Console {
+export interface ConsoleLayouter {
   rerender(stdout: Stdout, stderr?: string): void;
+
+  clear(): void;
 }
 
 export default interface ConsoleModule {
-  createConsole(container: HTMLElement): Console;
+  createConsoleLayouter(container: HTMLElement): ConsoleLayouter;
 }
