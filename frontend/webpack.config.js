@@ -1,7 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
-
-const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 // FIXME: Remove Ace, JS-Interpreter and its dependency acorn from the window object
 module.exports = {
@@ -26,7 +23,8 @@ module.exports = {
         type: "asset/resource"
       },
       // reference for bundling Fraser's js interpreter:
-      // https://github.com/aminmarashi/JS-Interpreter/blob/master/webpack.config.js
+      // - https://github.com/aminmarashi/JS-Interpreter/blob/master/webpack.config.js
+      // - https://www.npmjs.com/package/js-interpreter?activeTab=code
       {
         test: path.resolve(__dirname, "vendor/JS-Interpreter/interpreter.js"),
         use: [
@@ -45,6 +43,26 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: path.resolve(
+          __dirname,
+          "vendor/JS-Interpreter/demos/serialize.js"
+        ),
+        use: [
+          {
+            loader: "exports-loader",
+            options: {
+              exports: ["serialize", "deserialize"]
+            }
+          },
+          {
+            loader: "imports-loader",
+            options: {
+              additionalCode: `var Interpreter = require("JS-Interpreter").Interpreter;`
+            }
+          }
+        ]
       }
     ]
   },
@@ -58,6 +76,10 @@ module.exports = {
       "JS-Interpreter-acorn": path.resolve(
         __dirname,
         "vendor/JS-Interpreter/acorn.js"
+      ),
+      "JS-Interpreter-serializer": path.resolve(
+        __dirname,
+        "vendor/JS-Interpreter/demos/serialize.js"
       )
     }
   },
@@ -65,11 +87,6 @@ module.exports = {
     filename: "bundle.js",
     path: path.resolve(__dirname, "build")
   },
-  plugins: [
-    new MonacoWebpackPlugin({
-      languages: ["javascript"]
-    })
-  ],
   cache: {
     type: "filesystem"
   },
