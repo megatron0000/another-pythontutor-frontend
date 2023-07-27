@@ -1,6 +1,6 @@
 /**
  * We use a trace format that differs slightly from pythontutor,
- * so this module knows how to make the conversion
+ * this file defines our trace typings
  */
 
 export interface Trace {
@@ -10,11 +10,13 @@ export interface Trace {
 
 export interface Step {
   stdout: Stdout;
-  line: number;
-  col: number;
+  line_start: number;
+  line_end: number;
+  col_start: number;
+  col_end: number;
   function_name: string;
   event: Event;
-  stack_frames: StackFrame[]; // the first frame is the global scope, with id=0
+  stack_frames: StackFrame[]; // the first frame is the global scope
   heap: Record<HeapElementId, HeapElement>;
   exception_message?: string; // string only if Step.event === "exception"
 }
@@ -30,13 +32,34 @@ export type Identifier = string;
 export type Event = "step_line" | "call" | "return" | "exception";
 
 export interface StackFrame {
-  function_name: string;
-  // id is 0 for the first frame (global frame)
   frame_id: StackFrameId;
+  function_name: string;
+  function_code: string;
+
+  /**
+   * Range of the function code
+   * relative to the whole program
+   */
+  code_line_start: number;
+  code_col_start: number;
+  code_line_end: number;
+  code_col_end: number;
+
+  /**
+   * Range of the latest active code
+   * inside this frame, relative to
+   * the whole program
+   */
+  state_line_start: number;
+  state_col_start: number;
+  state_line_end: number;
+  state_col_end: number;
+
   locals: Record<Identifier, Value>;
   ordered_locals: Identifier[];
-  // assuming pythontutor is correct,
-  // will only be present when Step.event === "return"
+  /**
+   * only present when Step.event === "return"
+   */
   return_value?: Value;
 }
 
@@ -116,8 +139,4 @@ interface NullValue {
 
 interface UndefinedValue {
   kind: "undefined";
-}
-
-export default interface TraceModule {
-  convertTrace(pyTutorTrace: any): Trace;
 }
