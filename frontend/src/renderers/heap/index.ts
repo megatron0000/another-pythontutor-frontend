@@ -1,5 +1,5 @@
 import type { Connection } from "../connection/types";
-import { isPointer } from "../../trace/trace";
+import { isPointer } from "../../trace";
 import type {
   HeapElementId,
   PointerValue,

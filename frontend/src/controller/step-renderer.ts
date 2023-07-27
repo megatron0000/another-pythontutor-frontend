@@ -1,4 +1,4 @@
-import { diffHeap, diffStack } from "../diff/diff";
+import { diffHeap, diffStack } from "../diff";
 import type { ConsoleLayouter } from "../renderers/console/types";
 import type { HeapLayouter } from "../renderers/heap/types";
 import type { StackLayouter } from "../renderers/stack/types";
@@ -21,7 +21,7 @@ import {
   createShallowArrayView,
   createShallowObjectView,
   createShallowStackFrameView
-} from "../renderers/view/view";
+} from "../renderers/view";
 import { DragTracker } from "./drag-tracker";
 
 export class StepRenderer {

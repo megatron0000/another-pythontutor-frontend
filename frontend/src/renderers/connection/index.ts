@@ -1,6 +1,6 @@
 import type { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
-import { diffConnections } from "../../diff/diff";
-import { isPointer } from "../../trace/trace";
+import { diffConnections } from "../../diff";
+import { isPointer } from "../../trace";
 import type {
   HeapElementId,
   PointerValue,
