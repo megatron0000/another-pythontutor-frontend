@@ -4,6 +4,14 @@ import * as d3 from "d3";
 
 export function createConsoleLayouter(container: HTMLElement) {
   const jsFrame = new JSFrame();
+
+  // heuristic: initial position of the console window
+  // based on the size of the viewport
+  const position =
+    window.innerWidth >= 700
+      ? { top: 60, left: window.innerWidth - 330 }
+      : { top: window.innerHeight - 90, left: 10 };
+
   const frame = jsFrame
     .create({
       // does not work because the jsframe lib has a bug
@@ -31,8 +39,7 @@ export function createConsoleLayouter(container: HTMLElement) {
       },
       width: 320,
       height: 80,
-      top: 60,
-      left: window.innerWidth - 340,
+      ...position,
       html: `
         <div class="console-content-container"></div>
       `
@@ -91,6 +98,19 @@ export function createConsoleLayouter(container: HTMLElement) {
   const contentArea = d3.select<HTMLElement, unknown>(
     ".console-content-container"
   );
+
+  // fix: avoid that the console window goes to outside
+  // the viewport when the window resizes
+  window.addEventListener("resize", () => {
+    const { pos, size } = frame._getCurrentSizePos();
+    const newPos = { ...pos };
+    if (pos.x < 0) newPos.x = 0;
+    if (pos.x >= window.innerWidth) newPos.x = window.innerWidth - size.width;
+    if (pos.y <= 60) newPos.y = 60;
+    if (pos.y >= window.innerHeight)
+      newPos.y = window.innerHeight - size.height;
+    frame.setPosition(newPos.x, newPos.y);
+  });
 
   return {
     rerender(stdout: Stdout, stderr?: string) {
