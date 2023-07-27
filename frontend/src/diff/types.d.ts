@@ -3,7 +3,7 @@
  * between two given visualization data structures
  */
 
-import type { Connection } from "../layout/types";
+import type { Connection } from "../renderers/connection/types";
 import type { HeapElementId, StackFrameId, Step } from "../trace/types";
 
 export interface Diff<T> {

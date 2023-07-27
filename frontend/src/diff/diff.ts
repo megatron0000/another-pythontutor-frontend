@@ -1,5 +1,5 @@
 import type { Step } from "../trace/types";
-import type { Connection } from "../layout/types";
+import type { Connection } from "../renderers/connection/types";
 
 export function diffHeap(step1: Step, step2: Step) {
   const destroyed = Object.keys(step1.heap).filter(
