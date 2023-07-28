@@ -78,13 +78,11 @@ const buttonVisualize = document.getElementById(
 // (for example, when user accesses "https://site.com/#visualize" directly)
 window.location.hash = "#edit";
 
-const editor = createEditor(
-  "code-editor-container",
-  localStorage.getItem("code") || "",
-  newCode => {
-    localStorage.setItem("code", newCode);
-  }
-);
+const editor = createEditor("code-editor-container", "", newCode => {
+  // TODO: remove unused code: not needed anymore because we disabled
+  // saving to local storage
+  // localStorage.setItem("code", newCode);
+});
 
 buttonVisualize.addEventListener("click", async () => {
   // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),
@@ -158,3 +156,18 @@ function ifErrorOpenModal(callback: Function) {
     showErrorModal(editor.getValue(), err);
   }
 }
+
+/**
+ * 5: warning on exit page
+ */
+
+// https://stackoverflow.com/a/7317311
+window.addEventListener("beforeunload", function (e) {
+  if (!editor.getValue()) return undefined;
+
+  const confirmationMessage =
+    "Seu código não será salvo. Se necessário, salve-o antes de sair";
+
+  (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+  return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+});
