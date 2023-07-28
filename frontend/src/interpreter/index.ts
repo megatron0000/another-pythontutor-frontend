@@ -11,7 +11,7 @@ import type {
 import { Interpreter as FraserInterpreter } from "JS-Interpreter";
 
 import type { Node } from "JS-Interpreter-ast";
-import { errorToString, isPrimitive } from "../utils";
+import { isPrimitive } from "../utils";
 import { collectLocals } from "./ast";
 import { ConsoleCollector } from "./console-collector";
 import { DiffStack } from "./diff-stack";
@@ -493,4 +493,21 @@ export class Interpreter {
     this.exceptionStateStack.push(this.exceptionState);
     this.executionStateStack.push(this.executionState);
   }
+}
+
+/**
+ * Stringifies an interpreted Error (i.e. an error of the interpreted code)
+ */
+export function errorToString(error: unknown): string {
+  if (error === null || typeof error !== "object") {
+    return String(error);
+  }
+
+  let result = "";
+
+  result += "name" in error ? `${error.name}: ` : "<Unknown Error>: ";
+  result += "message" in error ? error.message : "<no message>";
+  result += "stack" in error ? `\n${error.stack}` : "\n<no stack>";
+
+  return result;
 }

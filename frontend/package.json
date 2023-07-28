@@ -40,6 +40,7 @@
     "eslint-linter-browserify": "^8.45.0",
     "eslint-plugin-es5": "^1.5.0",
     "jsframe.js": "^1.6.2",
-    "monaco-editor": "^0.34.0"
+    "monaco-editor": "^0.34.0",
+    "stacktrace-js": "^2.0.2"
   }
 }

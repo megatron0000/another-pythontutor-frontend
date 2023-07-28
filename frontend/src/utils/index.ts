@@ -1,3 +1,5 @@
+import { fromError } from "stacktrace-js";
+
 export function isPrimitive(
   value: unknown
 ): value is number | string | boolean | undefined | null {
@@ -10,28 +12,27 @@ export function isPrimitive(
   );
 }
 
-export function errorToString(error: unknown): string {
+export async function errorToString(error: unknown): Promise<string> {
   if (error === null || typeof error !== "object") {
     return String(error);
   }
 
-  if ("stack" in error) {
-    return String(error.stack);
-  }
+  let result = "";
 
-  if ("name" in error && "message" in error) {
-    return `${error.name}: ${error.message}`;
-  }
+  result += "name" in error ? `${error.name}: ` : "<Unknown Error>: ";
+  result += "message" in error ? error.message : "<no message>";
+  result +=
+    "stack" in error
+      ? `\n${await sourceMapStackTrace(error as Error)}`
+      : "\n<no stack>";
 
-  if ("message" in error) {
-    return `Error: ${error.message}`;
-  }
+  return result;
+}
 
-  if ("name" in error) {
-    return String(error.name);
-  }
-
-  return "Error";
+async function sourceMapStackTrace(error: Error) {
+  return fromError(error)
+    .then(values => values.map(value => value.toString()).join("\n"))
+    .catch(err => error.stack);
 }
 
 /**

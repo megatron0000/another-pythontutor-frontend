@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/css-reset.css" />
     <link rel="stylesheet" href="css/navigation.css" />
     <link rel="stylesheet" href="css/visualizer.css" />
+    <link rel="stylesheet" href="css/modal.css" />
     <link rel="stylesheet" href="css/editor.css" />
     <link rel="stylesheet" href="css/buttons.css" />
     <link rel="stylesheet" href="css/utils.css" />
@@ -60,6 +61,29 @@
         </div>
         <div class="console-window-container"></div>
       </section>
+      <article id="error-modal" style="display: none">
+        <section class="error-modal-content">
+          <section id="error-modal-message">
+            A aplicação encontrou um erro. O relatório de erro inclui o seu
+            código e o estado da aplicação.
+          </section>
+          <section id="error-modal-buttons-container">
+            <button class="button" id="send-error-report-button">
+              Enviar relatório de erro<br />(saberemos do erro e vamos corrigir)
+            </button>
+            <button class="button" id="dont-send-error-report-button">
+              Não enviar<br />(não saberemos que o erro existe)
+            </button>
+            <button
+              class="button"
+              id="error-modal-ok-button"
+              style="display: none"
+            >
+              OK
+            </button>
+          </section>
+        </section>
+      </article>
     </main>
 
     <script src="build/bundle.js"></script>

@@ -7,6 +7,7 @@ import * as jsplumb from "@jsplumb/browser-ui";
 
 import { VisualizationController } from "./controller";
 import { createEditor } from "./app/code-editor";
+import { showErrorModal } from "./app/error-modal";
 
 /**
  * 1: objects in the #visualize page
@@ -96,8 +97,10 @@ buttonVisualize.addEventListener("click", async () => {
   buttonVisualize.disabled = true;
   buttonVisualize.textContent = "Carregando...";
 
-  controller.reset(editor.getValue());
-  controller.renderCurrentStep();
+  ifErrorOpenModal(() => {
+    controller.reset(editor.getValue());
+    controller.renderCurrentStep();
+  });
   maybeDisableStepButtons();
 
   buttonVisualize.disabled = false;
@@ -124,22 +127,22 @@ function maybeDisableStepButtons() {
 }
 
 buttonPrevMicro.addEventListener("click", () => {
-  controller.backwardStep("micro");
+  ifErrorOpenModal(() => controller.backwardStep("micro"));
   maybeDisableStepButtons();
 });
 
 buttonNextMicro.addEventListener("click", () => {
-  controller.advanceStep("micro");
+  ifErrorOpenModal(() => controller.advanceStep("micro"));
   maybeDisableStepButtons();
 });
 
 buttonPrevMacro.addEventListener("click", () => {
-  controller.backwardStep("macro");
+  ifErrorOpenModal(() => controller.backwardStep("macro"));
   maybeDisableStepButtons();
 });
 
 buttonNextMacro.addEventListener("click", () => {
-  controller.advanceStep("macro");
+  ifErrorOpenModal(() => controller.advanceStep("macro"));
   maybeDisableStepButtons();
 });
 
@@ -147,3 +150,11 @@ buttonEdit.addEventListener("click", () => {
   window.location.hash = "#edit";
   buttonVisualize.style.display = "block";
 });
+
+function ifErrorOpenModal(callback: Function) {
+  try {
+    callback();
+  } catch (err) {
+    showErrorModal(editor.getValue(), err);
+  }
+}

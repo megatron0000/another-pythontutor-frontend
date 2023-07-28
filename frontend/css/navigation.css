@@ -4,8 +4,8 @@ body {
   height: 100vh;
 }
 
-section:not(:target):not(#edit),
-section:target ~ #edit {
+main > section:not(:target):not(#edit),
+main > section:target ~ #edit {
   display: none;
 }
 
