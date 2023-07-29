@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajuda - Interpretador javascript ES5</title>
+
+    <link rel="stylesheet" href="./css/css-reset.css" />
+    <link rel="stylesheet" href="./css/help.css" />
+    <link rel="stylesheet" href="./vendor/fontawesome/css/all.min.css" />
+  </head>
+  <body>
+    <details>
+      <summary>O que é isso ?</summary>
+      <section>
+        <p>
+          É um interpretador de código javascript, ou seja, você escreve código
+          e clica em "Executar" para vê-lo executar passo a passo. É possível
+          avançar e retroceder na simulação.
+        </p>
+        <img src="media/sample.gif" width="300" />
+      </section>
+    </details>
+    <details>
+      <summary>O que os botões fazem ?</summary>
+      <section>
+        <table>
+          <tr>
+            <td><i class="fa fa-step-forward"></i></td>
+            <td>
+              Avança um micro-passo na simulação. Por exemplo, num cálculo
+              aritmético como <code>2 + 3/5</code>, ele passa individualmente
+              por cada etapa da conta
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-step-backward"></i></td>
+            <td>Volta um micro-passo na simulação</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-fast-forward"></i></td>
+            <td>
+              Avança um macro-passo na simulação. Um macro-passo equivale a
+              vários micro-passos, geralmente significa que a simulação vai
+              avançar uma linha inteira de uma só vez. Por exemplo, num cálculo
+              aritmético como <code>2 + 3/5</code>, ele pula toda a conta de uma
+              vez.
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-fast-backward"></i></td>
+            <td>Volta um macro-passo na simulação</td>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-arrows-down-to-line"></i></td>
+            <td>
+              Avança a simulação continuamente até o fim (é possível pausar
+              clicando de novo no mesmo botão)
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-pen-to-square"></i></td>
+            <td>Volta ao editor de código</td>
+          </tr>
+        </table>
+      </section>
+    </details>
+    <details>
+      <summary>Créditos</summary>
+      <section>
+        <p>
+          Este simulador só é possível porque existem o
+          <a href="https://pythontutor.com/">Python Tutor</a>, que é um
+          simulador de código de onde praticamente imitamos a lógica de
+          renderização, e o interpretador
+          <a href="https://github.com/NeilFraser/JS-Interpreter/tree/master"
+            >JS-Interpreter</a
+          >, que usamos para traçar o passo a passo do código javascript no
+          próprio navegador sem a necessidade de um servidor.
+        </p>
+        <p>
+          Mas esses não são os únicos softwares que precisamos creditar. Veja no
+          nosso
+          <a href="https://github.com/megatron0000/another-pythontutor-frontend"
+            >Github</a
+          >
+          todos eles e suas licenças. Seguem mais alguns:
+        </p>
+        <p>
+          <a href="https://github.com/jsplumb/jsplumb">Jsplumb</a> para as
+          flechas de conexão (vetores e objetos).
+          <a href="https://ace.c9.io/">Ace Editor</a>, o editor de código.
+          <a href="https://d3js.org/">D3</a>, biblioteca também usada para o
+          desenho da simulação.
+          <a href="https://github.com/google/diff-match-patch"
+            >Diff-match-patch</a
+          >, para guardar os "snapshots" do simulador que permitem retroceder a
+          simulação. <a href="">ESLint</a>, que analisa o código e mostra as
+          mensagens de erro.
+          <a href="https://github.com/riversun/JSFrame.js/">JSFrame.js</a> para
+          a janelinha de console da simulação.
+        </p>
+      </section>
+    </details>
+  </body>
+</html>
