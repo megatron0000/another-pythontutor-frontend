@@ -10,9 +10,9 @@
   "scripts": {
     "watch-backend": "nodemon --ignore 'frontend/*' -e js index.js",
     "watch-frontend": "cd frontend/ && npx webpack --watch --progress --config webpack.config.dev.js",
-    "start": "concurrently \"npm:watch*\"",
-    "build": "cd frontend/ && tsc",
-    "build-prod": "cd frontend/ && npx webpack --config webpack.config.prod.js"
+    "start-dev": "concurrently \"npm:watch*\"",
+    "build-prod": "cd frontend/ && npx webpack --config webpack.config.prod.js",
+    "deps": "npm install && git submodule update --init --remote"
   },
   "devDependencies": {
     "concurrently": "^7.2.1",
