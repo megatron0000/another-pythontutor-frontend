@@ -168,7 +168,7 @@ export class Stepper {
       depth: x.depth,
       index: x.index,
       mode: x.mode,
-      state: this.interpreter.getStateStack()[x.index]
+      state: this.getStateStack()[x.index]
     }));
   }
 
@@ -179,7 +179,7 @@ export class Stepper {
   get ast() {
     // fix: do not use `interpreter.ast` because it is a Program node
     // where `node.body` is an empty array
-    return this.interpreter.getStateStack()[0].node;
+    return this.getStateStack()[0].node;
   }
 
   private injectFunctions(
@@ -193,7 +193,7 @@ export class Stepper {
       }
       const pseudoFn = interpreter.nativeToPseudo((...args: any[]) =>
         // call with current node and forwarded arguments
-        fn(this.interpreter.getStateStack().slice(-1)[0].node, ...args)
+        fn(this.getStateStack().slice(-1)[0].node, ...args)
       );
       interpreter.setProperty(globalObject, name, pseudoFn);
     });
@@ -244,6 +244,12 @@ export class Stepper {
         throw new Error("step: interpreter state stack is empty");
       }
       const state = stateStack[stateStack.length - 1];
+
+      // always skip a state which belongs to polyfill code
+      // (like array.map, array.push, etc.)
+      if (state.node.loc.source === "polyfills") {
+        continue;
+      }
 
       // If this is:
       // - the last step of a ReturnStatement or ThrowStatement
@@ -371,6 +377,11 @@ export class Stepper {
 
   getStateStack() {
     return this.interpreter.getStateStack();
+    // fix: filter out those states which correspond to the "internals"
+    // of polyfill code, like Array.prototype.map, Array.prototype.push, etc.
+    // return this.interpreter
+    //   .getStateStack()
+    //   .filter(state => state.node.loc.source !== "polyfills");
   }
 
   serialize(): [SerializedInterpreter, SerializedInternalState] {

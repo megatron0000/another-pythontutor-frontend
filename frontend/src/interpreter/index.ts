@@ -289,6 +289,11 @@ export class Interpreter {
         continue;
       }
 
+      // skip scope if it belongs to polyfill code (like array.map, array.push, etc.)
+      if (state.node.loc.source === "polyfills") {
+        continue;
+      }
+
       stack_frames.push(
         this.collectStackFrameWithLocals(heap, state, stateStack)
       );

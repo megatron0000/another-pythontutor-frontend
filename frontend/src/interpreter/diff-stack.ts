@@ -2,6 +2,8 @@ import { diff_match_patch } from "diff-match-patch";
 
 const dmp = new diff_match_patch();
 
+dmp.Diff_Timeout = 0.1;
+
 export class DiffStack {
   /**
    * Last element is a full-text, other elements
@@ -21,6 +23,7 @@ export class DiffStack {
     const diffs = dmp.diff_main(newText, previousText);
     dmp.diff_cleanupEfficiency(diffs);
     const delta = dmp.diff_toDelta(diffs);
+    console.log(delta.length, newText.length);
     this.stack.push(delta);
 
     this.stack.push(newText);
