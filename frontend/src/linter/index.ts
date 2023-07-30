@@ -43,7 +43,7 @@ export function lint(code: string) {
       "no-multi-assign": "error", // disallows using multiple assignments within a single statement.
       "no-redeclare": "error", // forbid e.g. `var x; var x;`
       "vars-on-top": "error", // Require var declarations be placed at the top of their containing scope
-      "no-sequences": "error", // forbid comma operator, e.g. `var a = (3, 5); // a = 5`
+      "no-sequences": ["error", { allowInParentheses: false }], // forbid comma operator, e.g. `var a = (3, 5); // a = 5`
       "no-sparse-arrays": "error", // forbid e.g. `var colors = [ "red", , "blue" ];`
       "no-eval": "error",
       "no-labels": "error", // Disallow labeled statements,
@@ -104,6 +104,7 @@ export function lint(code: string) {
       "no-destructuring": "error",
       "no-es6-methods": "error",
       "no-es6-static-methods": "error",
+      "no-exponentiation-operator": "error",
       "no-for-of": "error",
       "no-generators": "error",
       "no-modules": "error",
