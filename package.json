@@ -11,7 +11,7 @@
     "watch-backend": "nodemon --ignore 'frontend/*' -e js index.js",
     "watch-frontend": "cd frontend/ && npx webpack --watch --progress --config webpack.config.dev.js",
     "start-dev": "concurrently \"npm:watch*\"",
-    "build-prod": "cd frontend/ && npx webpack --config webpack.config.prod.js",
+    "build-prod": "cd frontend/ && npm ci && npx webpack --config webpack.config.prod.js",
     "deps": "npm install && git submodule update --init --remote",
     "deps-prod": "npm ci && git submodule update --init --remote"
   },
