@@ -23,7 +23,6 @@ export class DiffStack {
     const diffs = dmp.diff_main(newText, previousText);
     dmp.diff_cleanupEfficiency(diffs);
     const delta = dmp.diff_toDelta(diffs);
-    console.log(delta.length, newText.length);
     this.stack.push(delta);
 
     this.stack.push(newText);
