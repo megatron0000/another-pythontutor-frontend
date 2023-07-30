@@ -22,7 +22,7 @@
       </section>
     </details>
     <details>
-      <summary>O que os botões fazem ?</summary>
+      <summary>Para que servem os botões ?</summary>
       <section>
         <table>
           <tr>
@@ -66,6 +66,25 @@
       </section>
     </details>
     <details>
+      <summary>O que é possível fazer ?</summary>
+      <section>
+        <p>
+          O simulador aceita código em javacript versão ES5, com limitações
+          (veja a seção "Limitações")
+        </p>
+        <p>
+          Existem no simulador 2 funções globais: <code>input()</code>, que
+          exibe uma janela para o usuário escrever um número, e
+          <code>output(x)</code>, que imprime no console qualquer valor
+          <code>x</code>.
+        </p>
+        <p>
+          Não existe <code>prompt</code>, <code>confirm</code>,
+          <code>alert</code> ou <code>console</code>.
+        </p>
+      </section>
+    </details>
+    <details>
       <summary>Créditos</summary>
       <section>
         <p>
@@ -101,6 +120,49 @@
           <a href="https://github.com/riversun/JSFrame.js/">JSFrame.js</a> para
           a janelinha de console da simulação.
         </p>
+      </section>
+    </details>
+    <details>
+      <summary>Limitações</summary>
+      <section>
+        <ul>
+          <li>
+            Somente código ES5. Código ES6 não funciona (por causa do
+            interpretador JS-Interpreter)
+          </li>
+          <li>
+            Somente código síncrono, não há <code>setTimeout</code>,
+            <code>setInterval</code>, <code>Promise</code>, funções
+            <code>async</code>, etc.
+          </li>
+          <li>
+            Não são aceitas as sintaxes <code>with</code>,
+            <code>try/catch/finally</code>, <code>throw</code>,
+            <code>getter/setter</code> e expressões regulares. É possível dar
+            suporte a elas, mas não eram necessárias para nosso objetivo inicial
+            (não implementamos por falta de tempo)
+          </li>
+          <li>
+            Várias convenções de código são exigidas (linter). Infrações são
+            relatadas como erros no editor de código.
+          </li>
+          <li>
+            Vários nomes globais não podem ser usados (isso é arbitrário,
+            poderiam ser permitidos facilmente). São eles:
+            <code>window</code>, <code>self</code>, <code>Function</code>,
+            <code>Object</code>, <code>constructor</code>, <code>Array</code>,
+            <code>String</code>, <code>Boolean</code>, <code>Number</code>,
+            <code>Date</code>, <code>RegExp</code>, <code>Error</code>,
+            <code>EvalError</code>, <code>RangeError</code>,
+            <code>ReferenceError</code>, <code>SyntaxError</code>,
+            <code>TypeError</code>, <code>URIError</code>, <code>JSON</code>,
+            <code>eval</code>, <code>parseInt</code>, <code>parseFloat</code>,
+            <code>isNaN</code>, <code>isFinite</code>, <code>escape</code>,
+            <code>unescape</code>, <code>decodeURI</code>,
+            <code>decodeURIComponent</code>, <code>encodeURI</code>,
+            <code>encodeURIComponent</code>
+          </li>
+        </ul>
       </section>
     </details>
   </body>

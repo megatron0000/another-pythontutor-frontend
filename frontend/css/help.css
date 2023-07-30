@@ -54,4 +54,17 @@ p {
 
 ul {
   list-style: square;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 20px;
+}
+
+code {
+  color: #eb5757;
+  background: rgba(135, 131, 120, 0.15);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 85%;
 }
