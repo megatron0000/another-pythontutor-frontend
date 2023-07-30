@@ -1,0 +1,91 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 10px;
+  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  line-height: 1.5;
+}
+
+h3 {
+  font-weight: bold;
+  font-size: 18px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+}
+
+details {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0.5em 0.5em 0;
+  width: 100%;
+  margin: 10px 0px;
+}
+
+summary {
+  font-weight: bold;
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+details[open] {
+  padding: 0.5em;
+}
+
+details[open] summary {
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 0.5em;
+}
+
+details > section {
+  padding-top: 0.5 em;
+  padding-bottom: 0.5em;
+  line-height: 1.5;
+}
+
+img {
+  display: block;
+  margin: 15px auto;
+  border: 1px solid black;
+  max-width: 100%;
+}
+
+table td {
+  padding: 5px;
+}
+
+p {
+  margin: 10px 0;
+}
+
+ul {
+  list-style: square;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 20px;
+}
+
+code {
+  color: #eb5757;
+  background: rgba(135, 131, 120, 0.15);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 85%;
+}
+
+strong {
+  font-weight: bold;
+}
+
+.compilation-error {
+  background-color: gold;
+}
+
+.execution-error {
+  background-color: orange;
+}

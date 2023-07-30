@@ -1,0 +1,39 @@
+{
+  "name": "eslint-plugin-es5",
+  "version": "1.5.0",
+  "description": "ESLint plugin for ES5 users.",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "es5",
+    "es2015"
+  ],
+  "author": "Nikita Gusakov <gusnkt@gmail.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "homepage": "https://github.com/nkt/eslint-plugin-es5#readme",
+  "bugs": {
+    "url": "https://github.com/nkt/eslint-plugin-es5/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nkt/eslint-plugin-es5.git"
+  },
+  "scripts": {
+    "pretest": "eslint src/ tests/",
+    "test": "mocha ./tests/index.js",
+    "preversion": "npm test",
+    "postversion": "npm publish",
+    "postpublish": "git push --follow-tags"
+  },
+  "devDependencies": {
+    "eslint": "^4.14.0",
+    "mocha": "^6.1.4"
+  },
+  "peerDependencies": {
+    "eslint": ">= 3.0.0"
+  }
+}

@@ -1,0 +1,39 @@
+#error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+}
+
+.error-modal-content {
+  background-color: white;
+  width: min(100%, 600px);
+
+  border-radius: 10px;
+}
+
+#error-modal-message {
+  background-color: tomato;
+  border-radius: 10px 10px 0 0;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+#error-modal-buttons-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+#error-modal-buttons-container > button {
+  margin: 10px 0;
+}

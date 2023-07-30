@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajuda - Interpretador javascript ES5</title>
+
+    <link rel="stylesheet" href="./css/css-reset.css" />
+    <link rel="stylesheet" href="./css/help.css" />
+    <link rel="stylesheet" href="./vendor/fontawesome/css/all.min.css" />
+  </head>
+  <body>
+    <h3>Informações Gerais</h3>
+    <details>
+      <summary>O que é isso ?</summary>
+      <section>
+        <p>
+          É um interpretador de código javascript, ou seja, você escreve código
+          e clica em "Executar" para vê-lo executar passo a passo. É possível
+          avançar e retroceder na simulação.
+        </p>
+        <img src="media/sample.gif" width="300" />
+      </section>
+    </details>
+    <details>
+      <summary>Para que servem os botões ?</summary>
+      <section>
+        <table>
+          <tr>
+            <td><i class="fa fa-step-forward"></i></td>
+            <td>
+              Avança um micro-passo na simulação. Por exemplo, num cálculo
+              aritmético como <code>2 + 3/5</code>, ele passa individualmente
+              por cada etapa da conta
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-step-backward"></i></td>
+            <td>Volta um micro-passo na simulação</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-fast-forward"></i></td>
+            <td>
+              Avança um macro-passo na simulação. Um macro-passo equivale a
+              vários micro-passos, geralmente significa que a simulação vai
+              avançar uma linha inteira de uma só vez. Por exemplo, num cálculo
+              aritmético como <code>2 + 3/5</code>, ele pula toda a conta de uma
+              vez.
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-fast-backward"></i></td>
+            <td>Volta um macro-passo na simulação</td>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-arrows-down-to-line"></i></td>
+            <td>
+              Avança a simulação continuamente até o fim (é possível pausar
+              clicando de novo no mesmo botão)
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa-solid fa-pen-to-square"></i></td>
+            <td>Volta ao editor de código</td>
+          </tr>
+        </table>
+      </section>
+    </details>
+    <details>
+      <summary>O que é possível fazer ?</summary>
+      <section>
+        <p>
+          O simulador aceita código em javascript versão ES5, com limitações
+          (veja a seção "Limitações")
+        </p>
+        <p>
+          Existem no simulador 2 funções globais: <code>input()</code>, que
+          exibe uma janela para o usuário escrever um número, e
+          <code>output(x)</code>, que imprime no console qualquer valor
+          <code>x</code>.
+        </p>
+        <p>
+          Não existem <code>prompt</code>, <code>confirm</code>,
+          <code>alert</code> ou <code>console</code>.
+        </p>
+      </section>
+    </details>
+    <details>
+      <summary>Créditos</summary>
+      <section>
+        <p>
+          Este simulador só é possível porque existem o
+          <a href="https://pythontutor.com/">Python Tutor</a>, que é um
+          simulador de código de onde praticamente imitamos a lógica de
+          renderização, e o interpretador
+          <a href="https://github.com/NeilFraser/JS-Interpreter/tree/master"
+            >JS-Interpreter</a
+          >, que usamos para traçar o passo a passo do código javascript no
+          próprio navegador sem a necessidade de um servidor.
+        </p>
+        <p>
+          Mas esses não são os únicos softwares que precisamos creditar. Veja no
+          nosso
+          <a
+            href="https://github.com/megatron0000/another-pythontutor-frontend/tree/es5-interpreter"
+            >Github</a
+          >
+          todos eles e suas licenças. Seguem mais alguns:
+        </p>
+        <p>
+          <a href="https://github.com/jsplumb/jsplumb">Jsplumb</a> para as
+          flechas de conexão (vetores e objetos).
+          <a href="https://ace.c9.io/">Ace Editor</a>, o editor de código.
+          <a href="https://d3js.org/">D3</a>, biblioteca também usada para o
+          desenho da simulação.
+          <a href="https://github.com/google/diff-match-patch"
+            >Diff-match-patch</a
+          >, para guardar os "snapshots" do simulador que permitem retroceder a
+          simulação. <a href="https://eslint.org/">ESLint</a>, que analisa o
+          código e mostra as mensagens de erro.
+          <a href="https://github.com/riversun/JSFrame.js/">JSFrame.js</a> para
+          a janelinha de console da simulação.
+        </p>
+      </section>
+    </details>
+    <details>
+      <summary>Limitações</summary>
+      <section>
+        <ul>
+          <li>
+            Somente código ES5. Código ES6 não funciona (por causa do
+            interpretador JS-Interpreter)
+          </li>
+          <li>
+            Somente código síncrono, não há <code>setTimeout</code>,
+            <code>setInterval</code>, <code>Promise</code>, funções
+            <code>async</code>, etc.
+          </li>
+          <li>
+            Não são aceitas as sintaxes <code>with</code>,
+            <code>try/catch/finally</code>, <code>throw</code>,
+            <code>getter/setter</code> e expressões regulares. É possível dar
+            suporte a elas, mas não eram necessárias para nosso objetivo inicial
+            (não implementamos por falta de tempo)
+          </li>
+          <li>
+            Várias convenções de código são exigidas (linter). Infrações são
+            relatadas como erros no editor de código.
+          </li>
+          <li>
+            Vários nomes globais não podem ser usados (isso é arbitrário,
+            poderiam ser permitidos facilmente). São eles:
+            <code>window</code>, <code>self</code>, <code>Function</code>,
+            <code>Object</code>, <code>constructor</code>, <code>Array</code>,
+            <code>String</code>, <code>Boolean</code>, <code>Number</code>,
+            <code>Date</code>, <code>RegExp</code>, <code>Error</code>,
+            <code>EvalError</code>, <code>RangeError</code>,
+            <code>ReferenceError</code>, <code>SyntaxError</code>,
+            <code>TypeError</code>, <code>URIError</code>, <code>JSON</code>,
+            <code>eval</code>, <code>parseInt</code>, <code>parseFloat</code>,
+            <code>isNaN</code>, <code>isFinite</code>, <code>escape</code>,
+            <code>unescape</code>, <code>decodeURI</code>,
+            <code>decodeURIComponent</code>, <code>encodeURI</code>,
+            <code>encodeURIComponent</code>
+          </li>
+        </ul>
+      </section>
+    </details>
+    <h3>Guia de erros</h3>
+    <p>
+      Ao programar, você vai se deparar com dois tipos de erro:
+      <span class="compilation-error">erros de compilação</span> e
+      <span class="execution-error">erros de execução</span>.
+    </p>
+    <p>
+      <span class="compilation-error">Erros de compilação</span> são os que
+      aparecem enquanto você está escrevendo o código, antes mesmo de começar a
+      executá-lo. Por exemplo se você digitar um comando que não é javascript
+      válido, como <code>var minha idade = 10;</code>. Nesse exemplo, o erro é
+      que o nome da variável não pode ter espaço, deveria ser algo como
+      <code>minhaidade</code> ou <code>minha_idade</code> ou
+      <code>minhaIdade</code>. Veja como esse erro aparece:
+    </p>
+    <img src="media/variable-with-spaces-error.png" />
+    <p>
+      Já <span class="execution-error">erros de execução</span> não aparecem
+      enquanto você digita o código. Eles acontecem depois, durante a simulação,
+      quando algum passo encontra um problema e o programa dá um erro, que vai
+      aparecer como uma mensagem vermelha na janelinha de console do simulador.
+      Por exemplo se você tem uma variável <code>x</code> que deveria ser um
+      array, mas você esqueceu de inicializá-la e deu o comando
+      <code>x.push(40);</code>. Vai aparecer o seguinte:
+    </p>
+    <img src="media/type-error-undefined.png" />
+    <p>
+      O que a mensagem vermelha quer dizer é: a variável <code>x</code> vale
+      <code>undefined</code> porque não foi inicializada, aí não tem como usar o
+      comando <code>push</code> porque ele só é aplicável em arrays.
+    </p>
+    <p>
+      Não se preocupe se não entendeu esse exemplo, ele já é meio "avançado"
+      (você só encontraria algo assim caso estivesse mexendo com arrays, que já
+      não são a coisa mais básica de javascript). Mas note que o erro sempre vem
+      dizendo a linha e a coluna onde houve o problema. No caso foi na linha 3,
+      coluna 0 (o primeiro caractere da linha é 0, não 1, por isso que a coluna
+      é 0)
+    </p>
+    <p>
+      Quando tiver um erro desses, pesquise na internet o que ele significa.
+    </p>
+    <p>
+      Para <span class="compilation-error">erros de compilação</span>, segue
+      abaixo uma lista (não-exaustiva) em ordem alfabética de erros possíveis e
+      o que eles significam:
+    </p>
+    <details>
+      <summary>
+        '...' declared on line '...' column '...' is used outside of binding
+        context
+      </summary>
+      <section>
+        <p>
+          Você declarou uma variável dentro de um bloco (exemplo:
+          <code>if</code>, <code>while</code>, <code>for</code>, etc.) mas
+          depois tentou usá-la fora desse bloco. Declare todas as variáveis no
+          início que não terá esse problema.
+        </p>
+        <img src="media/errors/is-used-outside-of-binding-context.png" />
+      </section>
+    </details>
+
+    <details>
+      <summary>'...' is already defined</summary>
+      <section>
+        <p>
+          Você tentou declarar de novo uma variável que já existia. Não repita
+          nomes de variáveis.
+        </p>
+        <img src="media/errors/is-already-defined.png" />
+      </section>
+    </details>
+    <details>
+      <summary>'...' is not defined</summary>
+      <section>
+        <p>
+          Você tentou usar uma variável que não existe. Será que digitou errado
+          o nome dela ?
+        </p>
+        <img src="media/errors/x-is-not-defined.png" />
+      </section>
+    </details>
+    <details>
+      <summary>'...' was used before it was defined</summary>
+      <section>
+        <p>
+          Você tentou usar uma variável antes da linha onde ela é declarada.
+          Declare primeiro, use depois.
+        </p>
+        <img src="media/errors/x-was-used-before-it-was-defined.png" />
+      </section>
+    </details>
+    <details>
+      <summary>
+        All 'var' declarations must be at the top of the function scope
+      </summary>
+      <section>
+        <p>
+          Você declarou uma variável no meio do programa. Declara todas as
+          variáveis no início.
+        </p>
+        <img src="media/errors/all-var-declarations-must-be-at-the-top.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Expected '===' and instead saw '=='</summary>
+      <section>
+        <p>
+          Você tentou usar <code>==</code> ou <code>!=</code>, mas nós exigimos
+          <code>===</code> e <code>!==</code>.
+        </p>
+        <img src="media/errors/expected-===.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Parsing error: 'with' in strict mode</summary>
+      <section>
+        <p>Você usou a sintaxe <code>with</code>, a qual não é suportada.</p>
+        <img src="media/errors/parsing-error-with-in-strict-mode.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Parsing error: Assigning to rvalue</summary>
+      <section>
+        <p>
+          Você escreveu um comando de atribuição (ou seja, um comando do tipo
+          <code>x = 10;</code>), mas o que está escrito à esquerda do sinal de
+          <code>=</code> não é o nome de uma variável (deveria ser).
+        </p>
+        <img src="media/errors/parsing-error-assigning-to-rvalue.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Parsing error: Identifier directly after number</summary>
+      <section>
+        <p>
+          Provavelmente você tentou definir o nome de uma variável começando com
+          um número. Lembre-se das regras para nomes de variável:
+        </p>
+        <ul>
+          <li>
+            Começar com <code>_</code> ou <code>$</code> ou uma letra (maiúscula
+            ou minúscula). <strong>Não pode</strong> começar com dígito
+          </li>
+          <li>
+            Os outros caracteres do nome da variável podem ser os acima
+            mencionados, e também podem ser dígitos (0, 1, 2, ..., 9)
+          </li>
+          <li>
+            Lembre-se que nomes de variável diferenciam entre letras maiúsculas
+            e minúsculas. Por exemplo, <code>idade</code> e
+            <code>Idade</code> são dois nomes diferentes
+          </li>
+        </ul>
+        <img
+          src="media/errors/parsing-error-identifier-directly-after-number.png"
+        />
+      </section>
+    </details>
+    <details>
+      <summary>Parsing error: Unexpected keyword</summary>
+      <section>
+        <p>
+          Provavelmente você criou uma variável com o mesmo nome de uma
+          palavra-chave da linguagem (como <code>if</code>, <code>while</code>,
+          etc.). Mude o nome da variável.
+        </p>
+        <img src="media/errors/parsing-error-unexpected-keyword.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Parsing error: Unexpected token</summary>
+      <section>
+        <p>
+          É um erro na escrita do código. "Token" significa
+          "caractere"/"palavra", ou seja, o comando que você escreveu não segue
+          totalmente as regras do javascript, então o computador não o entendeu.
+          No exemplo da imagem abaixo, queríamos criar uma variável
+          <code>var x = 10;</code> mas esquecemos de digitar o nome da variável,
+          daí o computador reclama que ele viu um sinal <code>=</code> onde
+          deveria aparecer o nome da variável.
+        </p>
+        <p>
+          Pode ser difícil achar a causa exata de um erro "Unexpected token",
+          porque <strong>muitos</strong> erros de digitação podem causá-lo. No
+          exemplo, foi a falta de uma palavra (<code>x</code>), mas poderia ser
+          falta de chaves (<code>}</code>), falta de ponto-e-vírgula
+          (<code>;</code>), falta de vírgula (<code>,</code>), e muitos outros
+          deslizes na hora de escrever o código.
+        </p>
+        <p>
+          Quando se deparar com um erros desses, conserte a indentação do seu
+          código para facilitar perceber erros de digitação, e consulte a
+          referência dos comandos que estiver usando (<code>var</code>,
+          <code>if</code>, <code>while</code>, etc.) para garantir que você está
+          usando a forma correta de escrevê-los.
+        </p>
+        <img src="media/errors/parsing-error-unexpected-token.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Parsing error: Unterminated comment</summary>
+      <section>
+        <p>
+          Você abriu um comentário multi-linha (<code>/* ... */</code>) mas não
+          o fechou.
+        </p>
+        <img src="media/errors/parsing-error-unterminated-comment.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Read-only global '...' should not be modified</summary>
+      <section>
+        <p>
+          Você tentou atribuir um valor a um nome global (como se ele fosse uma
+          variável). Não use <code>undefined</code>, <code>input</code>,
+          <code>output</code>, <code>NaN</code>, etc. como nome de variável.
+        </p>
+        <img src="media/errors/read-only-global-should-not-be-modified.png" />
+      </section>
+    </details>
+    <details>
+      <summary>The use of getter/setter is not allowed</summary>
+      <section>
+        <p>
+          Você usou um <code>get</code> ou <code>set</code> num objeto. Essas
+          construções não são suportadas.
+        </p>
+        <img src="media/errors/the-use-of-getter-setter-is-not-allowed.png" />
+      </section>
+    </details>
+    <details>
+      <summary>The use of regular expression is not allowed</summary>
+      <section>
+        <p>
+          Você usou uma expressão regular. Expressões regulares não são
+          suportadas.
+        </p>
+        <img
+          src="media/errors/the-use-of-regular-expression-is-not-allowed.png"
+        />
+      </section>
+    </details>
+    <details>
+      <summary>The use of throw is not allowed</summary>
+      <section>
+        <p>Você usou <code>throw</code>. Essa construção não é suportada.</p>
+        <img src="media/errors/the-use-of-throw-is-not-allowed.png" />
+      </section>
+    </details>
+    <details>
+      <summary>The use of try-catch is not allowed</summary>
+      <section>
+        <p>
+          Você usou alguma das construções <code>try</code> /
+          <code>catch</code> / <code>finally</code>. Elas não são suportadas.
+        </p>
+        <img src="media/errors/the-use-of-try-catch-is-not-allowed.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected arrow-function expression</summary>
+      <section>
+        <p>
+          Você usou uma
+          <a
+            href="https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+            >arrow function</a
+          >, que é um recurso do javascript ES6. Somente suportamos a versão
+          ES5, transforme a arrow-function numa função normal.
+        </p>
+        <img src="media/errors/unexpected-arrow-function-expression.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected binary literal</summary>
+      <section>
+        <p>
+          Pode ser também "Unexpected octal literal". Acontece quando você tenta
+          usar um número na forma binária ou octal. Esses são recursos do
+          javascript ES6. Somente suportamos a versão ES5, mude o número para o
+          formato normal (decimal).
+        </p>
+        <img src="media/errors/unexpected-binary-literal.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected chained assignment</summary>
+      <section>
+        <p>
+          Você tentou atribuir a mais de uma variável de uma só vez. Faça
+          atribuições separadas, como <code>x = 10;</code> numa linha e
+          <code>y = 10;</code> na outra.
+        </p>
+        <img src="media/errors/unexpected-chained-assignment.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected class declaration</summary>
+      <section>
+        <p>
+          Você tentou criar uma classe (<code>class</code>), que é um recurso do
+          javascript ES6. Somente suportamos a versão ES5, use uma função
+          construtora em vez de uma classe.
+        </p>
+        <img src="media/errors/unexpected-class-declaration.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected comma in middle of array</summary>
+      <section>
+        <p>
+          Você tentou criar um array mas deixou um elemento em branco. Preencha
+          todos os elementos com algum valor.
+        </p>
+        <img src="media/errors/unexpected-comma-in-middle-of-array.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected computed property</summary>
+      <section>
+        <p>
+          Você tentou criar um objeto com uma propriedade computada (i.e. o nome
+          da chave vem de uma variável). Esse é um recurso do javascript ES6,
+          mas somente suportamos a versão ES5. Substitua o nome computado por um
+          nome literal, por exemplo <code>var obj = {idade: 10};</code>.
+        </p>
+        <img src="media/errors/unexpected-computed-property.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected const declaration</summary>
+      <section>
+        <p>
+          Você definiu uma variável usando a palavra-chave <code>const</code>,
+          que é um recurso do javascript ES6. Somente suportamos a versão ES5,
+          mude para <code>var</code>.
+        </p>
+        <img src="media/errors/unexpected-const-declaration.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected destructuring</summary>
+      <section>
+        <p>
+          Você usou desestruturação, que é um recurso do javascript ES6. Somente
+          suportamos a versão ES5, use acesso normal a propriedades, por exemplo
+          <code>var idade = obj.idade;</code>
+        </p>
+        <img src="media/errors/unexpected-destructuring.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected for-of statement</summary>
+      <section>
+        <p>
+          Você usou a construção <code>for(... of ...)</code>, que é um recurso
+          do javascript ES6. Somente suportamos a versão ES5, use outro tipo de
+          loop, como <code>while</code>, <code>for</code> normal, etc.
+        </p>
+        <img src="media/errors/unexpected-for-of-statement.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected generator</summary>
+      <section>
+        <p>
+          Você criou uma função geradora, que é um recurso do javascript ES6.
+          Somente suportamos a versão ES5, use uma função normal.
+        </p>
+        <img src="media/errors/unexpected-generator.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected labeled statement</summary>
+      <section>
+        <p>
+          Você tentou usar um recurso "obscuro" do javascript:
+          <strong>label</strong>, que é uma marcação que serve para identificar
+          um comando. Não suportamos essa construção, apague o label.
+        </p>
+        <img src="media/errors/unexpected-labeled-statement.png" />
+      </section>
+    </details>
+
+    <details>
+      <summary>Unexpected let declaration</summary>
+      <section>
+        <p>
+          Você definiu uma variável usando a palavra-chave <code>let</code>, que
+          é um recurso do javascript ES6. Somente suportamos a versão ES5, mude
+          para <code>var</code>.
+        </p>
+        <img src="media/errors/unexpected-let-declaration.png" />
+      </section>
+    </details>
+
+    <details>
+      <summary>Unexpected object shorthand property</summary>
+      <section>
+        <p>
+          Você criou um objeto onde alguma propriedade foi atribuída de forma
+          abreviada, que é um recurso do javascript ES6. Somente suportamos a
+          versão ES5, use a atribuição usual, por exemplo
+          <code>var obj = {idade: idade};</code>
+        </p>
+        <img src="media/errors/unexpected-object-shorthand-property.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected parameter with default value</summary>
+      <section>
+        <p>
+          Você criou uma função onde algum dos argumentos tem um valor padrão.
+          Esse é um recurso do javascript ES6, mas somente suportamos a versão
+          ES5. Apague o valor padrão, use um <code>if</code> dentro da função,
+          por exemplo <code>if (x === undefined) x = 10;</code>
+        </p>
+        <img src="media/errors/unexpected-parameter-with-default-value.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected rest parameter</summary>
+      <section>
+        <p>
+          Você criou uma função com
+          <a
+            href="https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/rest_parameters"
+            >parâmetro rest</a
+          >, que é um recurso do javascript ES6. Somente suportamos a versão
+          ES5, use parâmetros normais
+        </p>
+        <img src="media/errors/unexpected-rest-parameter.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected template string expression</summary>
+      <section>
+        <p>
+          Você criou uma
+          <a
+            href="https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Template_literals"
+            >template string</a
+          >, que é um recurso do javascript ES6. Somente suportamos a versão
+          ES5, use uma string normal, por exemplo
+          <code>var mensagem = "Oi, eu tenho " + idade + " anos";</code>
+        </p>
+        <img src="media/errors/unexpected-template-string-expression.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected use of '...'</summary>
+      <section>
+        <p>
+          Você tentou usar um nome global que nós proibimos. Os seguintes nomes
+          não podem ser usados no programa: <code>window</code>,
+          <code>self</code>, <code>Function</code>, <code>Object</code>,
+          <code>constructor</code>, <code>Array</code>, <code>String</code>,
+          <code>Boolean</code>, <code>Number</code>, <code>Date</code>,
+          <code>RegExp</code>, <code>Error</code>, <code>EvalError</code>,
+          <code>RangeError</code>, <code>ReferenceError</code>,
+          <code>SyntaxError</code>, <code>TypeError</code>,
+          <code>URIError</code>, <code>JSON</code>, <code>eval</code>,
+          <code>parseInt</code>, <code>parseFloat</code>, <code>isNaN</code>,
+          <code>isFinite</code>, <code>escape</code>, <code>unescape</code>,
+          <code>decodeURI</code>, <code>decodeURIComponent</code>,
+          <code>encodeURI</code>, <code>encodeURIComponent</code>.
+        </p>
+        <img src="media/errors/unexpected-use-of.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unexpected use of comma operator</summary>
+      <section>
+        <p>
+          Você usou um recurso "obscuro" do javascript: uma
+          <strong>sequência</strong>, que é uma lista de comandos separados por
+          vírgula. Será que queria criar um array como
+          <code>var x = [10, 20];</code> mas confundiu <code>[ ]</code> com
+          <code>( )</code> ?
+        </p>
+        <img src="media/errors/unexpected-use-of-comma-operator.png" />
+      </section>
+    </details>
+    <details>
+      <summary>Unnecessary semicolon</summary>
+      <section>
+        <p>
+          Você usou um ponto-e-vírgula <code>;</code> que não era necessário,
+          por exemplo no final de um <code>if</code> ou <code>while</code>.
+          Apague esse ponto-e-vírgula.
+        </p>
+        <img src="media/errors/unnecessary-semicolon.png" />
+      </section>
+    </details>
+  </body>
+</html>
