@@ -508,11 +508,14 @@ export function errorToString(error: unknown): string {
     return String(error);
   }
 
+  if ("stack" in error) {
+    return error.stack as string;
+  }
+
   let result = "";
 
   result += "name" in error ? `${error.name}: ` : "<Unknown Error>: ";
   result += "message" in error ? error.message : "<no message>";
-  result += "stack" in error ? `\n${error.stack}` : "\n<no stack>";
 
   return result;
 }
