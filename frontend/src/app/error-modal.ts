@@ -26,6 +26,7 @@ const errorModalOKButton = errorModal.querySelector(
 ) as HTMLButtonElement;
 
 export function showErrorModal(userCode: string, error: unknown) {
+  console.error(error);
   openModal();
   modalInitialState();
 
