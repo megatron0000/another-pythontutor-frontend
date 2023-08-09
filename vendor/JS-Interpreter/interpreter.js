@@ -2984,6 +2984,12 @@ Interpreter.prototype.getValueFromScope = function(name) {
  *     needs to be called, otherwise undefined.
  */
 Interpreter.prototype.setValueToScope = function(name, value) {
+  // fix: round near-integer numbers.
+  // example: 23 / 20 - (23 % 20) / 20 === 0.999999999999999999 (10^-16 difference from 1.0)
+  if (typeof value === "number") {
+    value = Number(value.toFixed(6));
+  }
+
   var scope = this.getScope();
   var strict = scope.strict;
   while (scope && scope !== this.globalScope) {
@@ -3121,6 +3127,12 @@ Interpreter.prototype.getValue = function(ref) {
  *     needs to be called, otherwise undefined.
  */
 Interpreter.prototype.setValue = function(ref, value) {
+  // fix: round near-integer numbers.
+  // example: 23 / 20 - (23 % 20) / 20 === 0.999999999999999999 (10^-16 difference from 1.0)
+  if (typeof value === "number") {
+    value = Number(value.toFixed(6));
+  }
+  
   if (ref[0] === Interpreter.SCOPE_REFERENCE) {
     // A null/varname variable lookup.
     return this.setValueToScope(ref[1], value);
