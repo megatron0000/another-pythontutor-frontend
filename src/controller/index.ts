@@ -49,10 +49,6 @@ export class VisualizationController {
       [
         "output",
         function (log, content: any) {
-          // fix: round near-integer numbers
-          if (typeof content === "number") {
-            content = Number(content.toFixed(6));
-          }
           const serializedContent = inspect(content, { depth: 3 });
           log(serializedContent);
         }
