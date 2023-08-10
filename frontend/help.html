@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="./css/css-reset.css" />
     <link rel="stylesheet" href="./css/help.css" />
+    <link rel="stylesheet" href="./css/buttons.css" />
     <link rel="stylesheet" href="./vendor/fontawesome/css/all.min.css" />
   </head>
   <body>
@@ -23,8 +24,15 @@
       </section>
     </details>
     <details>
-      <summary>Para que servem os botões ?</summary>
+      <summary>Quais são os controles ?</summary>
       <section>
+        <strong>Clique-e-arraste para mover</strong>
+        <img src="media/drag-to-pan.gif" width="600" class="left" />
+        <strong>Role o mouse para zoom</strong>
+        <img src="media/mouse-wheel-zoom.gif" width="600" class="left" />
+        <strong>Mova e redimensione o Console</strong>
+        <img src="media/move-console.gif" width="600" class="left" />
+        <strong>Botões:</strong>
         <table>
           <tr>
             <td><i class="fa fa-step-forward"></i></td>
@@ -131,6 +139,7 @@
             Somente código ES5. Código ES6 não funciona (por causa do
             interpretador JS-Interpreter)
           </li>
+          <li>O código sempre executa em modo estrito (strict mode)</li>
           <li>
             Somente código síncrono, não há <code>setTimeout</code>,
             <code>setInterval</code>, <code>Promise</code>, funções
@@ -181,7 +190,7 @@
       <code>minhaidade</code> ou <code>minha_idade</code> ou
       <code>minhaIdade</code>. Veja como esse erro aparece:
     </p>
-    <img src="media/variable-with-spaces-error.png" />
+    <img src="media/errors/variable-with-spaces-error.png" />
     <p>
       Já <span class="execution-error">erros de execução</span> não aparecem
       enquanto você digita o código. Eles acontecem depois, durante a simulação,
@@ -191,7 +200,7 @@
       array, mas você esqueceu de inicializá-la e deu o comando
       <code>x.push(40);</code>. Vai aparecer o seguinte:
     </p>
-    <img src="media/type-error-undefined.png" />
+    <img src="media/errors/type-error-undefined.png" />
     <p>
       O que a mensagem vermelha quer dizer é: a variável <code>x</code> vale
       <code>undefined</code> porque não foi inicializada, aí não tem como usar o
