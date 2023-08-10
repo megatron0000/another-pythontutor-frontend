@@ -86,7 +86,11 @@ export type StepKind =
   | { kind: "end" }
   | { kind: "uncaught exception"; exception: unknown };
 
-export type StepperInjectedFunction = (node: Node, ...rest: any[]) => any;
+export type StepperInjectedFunction = (
+  node: Node,
+  throwException: (message: string) => void,
+  ...rest: any[]
+) => any;
 
 export class Stepper {
   /**
@@ -192,8 +196,12 @@ export class Stepper {
         throw new Error("injectFunctions: functions must have a name");
       }
       const pseudoFn = interpreter.nativeToPseudo((...args: any[]) =>
-        // call with current node and forwarded arguments
-        fn(this.getStateStack().slice(-1)[0].node, ...args)
+        // call with current node, throwException, and forwarded arguments
+        fn(
+          this.getStateStack().slice(-1)[0].node,
+          (message: string) => this.interpreter.throwException(message),
+          ...args
+        )
       );
       interpreter.setProperty(globalObject, name, pseudoFn);
     });
