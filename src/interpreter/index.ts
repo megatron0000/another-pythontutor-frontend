@@ -80,6 +80,7 @@ type ExceptionState = null | { exception: unknown };
 
 type InterpreterInjectedFunction = (
   log: (content: string) => void,
+  throwException: (message: string) => void,
   ...rest: any[]
 ) => any;
 
@@ -150,16 +151,23 @@ export class Interpreter {
         if (!name) {
           throw new Error("wrapInjectedFunctions: functions must have a name");
         }
-        const wrappedFunction = // signature offered by the stepper: Node and args passed from the interpreted code
-          function (node: Node, ...rest: any[]) {
-            // signature expected by the client of the Interpreter: first arg is log,
-            // others are the args passed from the interpreted code
-            return fn(
-              content =>
-                self.consoleCollector.log(content, node.loc.start.line),
-              ...rest
-            );
-          };
+        // signature offered by the stepper:
+        // Node, throwException, and args passed from the interpreted code
+        const wrappedFunction = function (
+          node: Node,
+          throwException: (message: string) => void,
+          ...rest: any[]
+        ) {
+          // signature expected by the client of the Interpreter:
+          // first arg is log,
+          // second is throwException,
+          // others are the args passed from the interpreted code
+          return fn(
+            content => self.consoleCollector.log(content, node.loc.start.line),
+            throwException,
+            ...rest
+          );
+        };
         // fix: forward the function name
         Object.defineProperty(wrappedFunction, "name", {
           value: fn.name,

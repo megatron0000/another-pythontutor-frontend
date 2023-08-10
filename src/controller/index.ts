@@ -40,15 +40,23 @@ export class VisualizationController {
     this.interpreter = new Interpreter(code, [
       [
         "input",
-        function (log): number {
+        function (log, throwException): number {
           const value = prompt("Digite um número:");
+          if (value === null) {
+            throwException("Entrada cancelada");
+            return 0;
+          }
           const valueAsNumber = Number(value);
+          if (isNaN(valueAsNumber)) {
+            throw throwException("Entrada não é um número");
+            return 0;
+          }
           return valueAsNumber;
         }
       ],
       [
         "output",
-        function (log, content: any) {
+        function (log, throwException, content: any) {
           const serializedContent = inspect(content, { depth: 3 });
           log(serializedContent);
         }
