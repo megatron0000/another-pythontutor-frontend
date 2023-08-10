@@ -13,11 +13,23 @@ export class ZoomService {
     // zoom and drag the scene
     // https://stackoverflow.com/questions/43903487/how-to-apply-d3-zoom-to-a-html-element
     d3.select<HTMLElement, unknown>(this.zoomContainer).call(
-      d3.zoom<HTMLElement, unknown>().on("zoom", event => {
-        const transform = event.transform;
-        this.visualizerContainer.style.transform = `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`;
-        this.visualizerContainer.style.transformOrigin = "0 0";
-      })
+      d3
+        .zoom<HTMLElement, unknown>()
+        // fix: disable zooming with Ctrl (too much zoom)
+        .filter(event => {
+          if (event.type === "wheel" && event.ctrlKey) {
+            // This disables the default browser zoom on ctrl + mousewheel
+            event.preventDefault();
+            return false;
+          }
+          return true;
+        })
+        .on("zoom", event => {
+          const transform = event.transform;
+          this.visualizerContainer.style.transform = `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`;
+          this.visualizerContainer.style.transformOrigin = "0 0";
+        })
+        .scaleExtent([0.2, 2])
     );
   }
 
