@@ -95,11 +95,15 @@ const buttonVisualize = document.getElementById(
 // (for example, when user accesses "https://site.com/#visualize" directly)
 window.location.hash = "#edit";
 
-const editor = createEditor("code-editor-container", "", newCode => {
-  // TODO: remove unused code: not needed anymore because we disabled
-  // saving to local storage
-  // localStorage.setItem("code", newCode);
-});
+const editor = createEditor(
+  "code-editor-container",
+  "// Aprenda os controles na página de ajuda\n// (botão '?' no canto direito superior)",
+  newCode => {
+    // TODO: remove unused code: not needed anymore because we disabled
+    // saving to local storage
+    // localStorage.setItem("code", newCode);
+  }
+);
 
 buttonVisualize.addEventListener("click", async () => {
   // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),
