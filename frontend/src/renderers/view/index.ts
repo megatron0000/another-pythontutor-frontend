@@ -592,32 +592,6 @@ class CodeAreaController {
         },
         { length: 0, index: -1 }
       );
-    var text = session.getLine(lineWithMostChars);
-    // @ts-ignore
-    var chars = session.$getStringScreenWidth(text, 80)[0];
-
-    var width =
-      Math.max(chars, 10) * renderer.characterWidth + // text size
-      2 * renderer.$padding + // padding
-      2 + // little extra for the cursor
-      0; // add border width if needed
-
-    // update container size
-    renderer.container.style.width = width + 44 + "px";
-    // update computed size stored by the editor
-    // @ts-ignore
-    renderer.onResize(false, 41, width, renderer.$size.height);
-    this._editor.resize(true);
-    // ace did not show horizontal scrollbar automatically, so check for overflow manually
-    if (text.length > 80) {
-      // @ts-ignore
-      renderer.scrollBarH.setVisible(true);
-      // https://bleepingcoder.com/ace/392616428/scrollbar-covers-last-line-in-editor
-      renderer.setScrollMargin(0, 10, 0, 10);
-    } else {
-      // @ts-ignore
-      renderer.scrollBarH.setVisible(false);
-    }
 
     // Ace starts with all text selected (don't know why). Therefore deselect
     this._editor.clearSelection();
