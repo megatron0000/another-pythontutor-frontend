@@ -4,11 +4,6 @@ body {
   height: 100vh;
 }
 
-main > section:not(:target):not(#edit),
-main > section:target ~ #edit {
-  display: none;
-}
-
 main,
 #visualize,
 #edit {

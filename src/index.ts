@@ -10,6 +10,20 @@ import { createEditor } from "./app/code-editor";
 import { showErrorModal } from "./app/error-modal";
 
 /**
+ * Navigation
+ */
+
+window.addEventListener("hashchange", event => {
+  const hash = event.newURL.slice(event.newURL.indexOf("#"));
+  console.log(hash);
+
+  document
+    .querySelectorAll<HTMLElement>("main > section")
+    .forEach(el => (el.style.display = "none"));
+  document.querySelector<HTMLElement>(hash)!.style.display = "block";
+});
+
+/**
  * 1: objects in the #visualize page
  */
 
@@ -81,11 +95,15 @@ const buttonVisualize = document.getElementById(
 // (for example, when user accesses "https://site.com/#visualize" directly)
 window.location.hash = "#edit";
 
-const editor = createEditor("code-editor-container", "", newCode => {
-  // TODO: remove unused code: not needed anymore because we disabled
-  // saving to local storage
-  // localStorage.setItem("code", newCode);
-});
+const editor = createEditor(
+  "code-editor-container",
+  "// Aprenda os controles na página de ajuda\n// (botão '?' no canto direito superior)",
+  newCode => {
+    // TODO: remove unused code: not needed anymore because we disabled
+    // saving to local storage
+    // localStorage.setItem("code", newCode);
+  }
+);
 
 buttonVisualize.addEventListener("click", async () => {
   // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),

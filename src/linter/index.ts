@@ -72,7 +72,7 @@ export function lint(code: string) {
         "SyntaxError",
         "TypeError",
         "URIError",
-        // "Math",
+        "Math",
         "JSON",
         "eval",
         "parseInt",

@@ -53,6 +53,10 @@ img {
   max-width: 100%;
 }
 
+img.left {
+  margin: 15px 10px;
+}
+
 table td {
   padding: 5px;
 }
