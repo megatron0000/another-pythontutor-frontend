@@ -597,7 +597,7 @@ class CodeAreaController {
     var chars = session.$getStringScreenWidth(text, 80)[0];
 
     var width =
-      Math.max(chars, 10) * renderer.characterWidth + // text size
+      chars * renderer.characterWidth + // text size
       2 * renderer.$padding + // padding
       2 + // little extra for the cursor
       0; // add border width if needed
