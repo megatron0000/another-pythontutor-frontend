@@ -47,6 +47,7 @@ export function lint(code: string) {
       "no-sparse-arrays": "error", // forbid e.g. `var colors = [ "red", , "blue" ];`
       "no-eval": "error",
       "no-labels": "error", // Disallow labeled statements,
+      "no-cond-assign": ["error", "always"], // disallow e.g. `if(x = 10)`
       "no-restricted-globals": [
         // properties of the global object in Fraser's interpreter
         "error",
