@@ -4,11 +4,16 @@ import "ace-builds/webpack-resolver";
 
 import { lint } from "../linter";
 
+export interface Editor {
+  getValue(): string;
+  hasErrors(): boolean;
+}
+
 export function createEditor(
   containerId: string,
   initialCode: string,
-  onCodeChange: (newCode: string) => void
-) {
+  onCodeChange: () => void
+): Editor {
   const editor = ace.edit(containerId, {
     fontSize: 15,
     theme: "ace/theme/chrome",
@@ -25,12 +30,26 @@ export function createEditor(
 
   const linter = new Linter(editor);
 
-  editor.session.on("change", () => {
-    onCodeChange(editor.getValue());
-    linter.lintAndMark();
+  let hasErrors = false;
+
+  editor.session.on("change", async () => {
+    const lintResult = await linter.lintAndMark();
+    if (lintResult !== LintResult.IGNORED) {
+      hasErrors = lintResult === LintResult.HAS_ERROR;
+      onCodeChange();
+    }
   });
 
-  return editor;
+  return {
+    getValue: () => editor.getValue(),
+    hasErrors: () => hasErrors
+  };
+}
+
+export enum LintResult {
+  OK,
+  HAS_ERROR,
+  IGNORED
 }
 
 class Linter {
@@ -43,7 +62,7 @@ class Linter {
 
   constructor(private editor: ace.Ace.Editor) {}
 
-  async lintAndMark() {
+  async lintAndMark(): Promise<LintResult> {
     // remove markers
     for (const previousMarker of this.previousMarkers) {
       this.editor.session.removeMarker(previousMarker);
@@ -54,7 +73,7 @@ class Linter {
     let lintNumberBak = ++this.lintNumber;
     const lintResult = await lint(code);
     if (lintNumberBak !== this.lintNumber) {
-      return;
+      return LintResult.IGNORED;
     }
 
     // show markers
@@ -84,5 +103,7 @@ class Linter {
         type: "error"
       }))
     );
+
+    return lintResult.length > 0 ? LintResult.HAS_ERROR : LintResult.OK;
   }
 }
