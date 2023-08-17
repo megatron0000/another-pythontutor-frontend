@@ -12,6 +12,12 @@ main,
   overflow: hidden;
 }
 
+#visualize,
+#edit {
+  display: flex;
+  flex-direction: column;
+}
+
 .navigation-menu {
   background-color: white;
   padding: 10px;
