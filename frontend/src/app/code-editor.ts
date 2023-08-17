@@ -18,7 +18,6 @@ export function createEditor(
     fontSize: 15,
     theme: "ace/theme/chrome",
     mode: "ace/mode/javascript",
-    maxLines: Infinity, // trick to make container height resize with editor content,
     value: initialCode,
     keyboardHandler: "ace/keyboard/vscode",
     printMargin: false,
