@@ -52,3 +52,16 @@ export function setDifference<T>(a: Set<T>, b: Set<T>): Set<T> {
 export function assertArray<T, U>(x: T[] | U): T[] {
   return x as T[];
 }
+
+/**
+ * Polyfill for Object.fromEntries
+ */
+export function objectFromEntries<T>(
+  entries: [string, T][]
+): Record<string, T> {
+  const val: Record<string, T> = {};
+  for (const [key, value] of entries) {
+    val[key] = value;
+  }
+  return val;
+}
