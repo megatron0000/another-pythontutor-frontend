@@ -11,7 +11,7 @@ import type {
 import { Interpreter as FraserInterpreter } from "JS-Interpreter";
 
 import type { Node } from "JS-Interpreter-ast";
-import { isPrimitive } from "../utils";
+import { isPrimitive, objectFromEntries } from "../utils";
 import { collectLocals } from "./ast";
 import { ConsoleCollector } from "./console-collector";
 import { DiffStack } from "./diff-stack";
@@ -353,7 +353,7 @@ export class Interpreter {
     const [function_name, ordered_locals, functionNode] =
       this.collectFrameNameLocalsAndNode(state, stateStack);
     const frame_id = state.scope.object.__custom_id_property__;
-    const locals: Record<HeapElementId, Value> = Object.fromEntries(
+    const locals: Record<HeapElementId, Value> = objectFromEntries(
       ordered_locals.map(localName => {
         const value = getVariableValue(localName, state.scope);
         if (!isPrimitive(value)) {
