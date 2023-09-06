@@ -97,7 +97,7 @@ window.location.hash = "#edit";
 
 const editor = createEditor(
   "code-editor-container",
-  "// Aprenda os controles na página de ajuda\n// (botão '?' no canto direito superior)",
+  "// Controles: veja página de ajuda\n// (botão '?')",
   () => {
     buttonVisualize.disabled = editor.hasErrors();
   }
