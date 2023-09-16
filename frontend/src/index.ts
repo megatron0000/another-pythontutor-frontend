@@ -8,6 +8,7 @@ import * as jsplumb from "@jsplumb/browser-ui";
 import { VisualizationController } from "./controller";
 import { createEditor } from "./app/code-editor";
 import { showErrorModal } from "./app/error-modal";
+import { MessageAPI } from "./message-api";
 
 /**
  * Navigation
@@ -102,6 +103,10 @@ const editor = createEditor(
     buttonVisualize.disabled = editor.hasErrors();
   }
 );
+
+new MessageAPI().listen(() => {
+  editor.focus();
+});
 
 buttonVisualize.addEventListener("click", async () => {
   // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),
