@@ -8,6 +8,7 @@ import * as jsplumb from "@jsplumb/browser-ui";
 import { VisualizationController } from "./controller";
 import { createEditor } from "./app/code-editor";
 import { showErrorModal } from "./app/error-modal";
+import { MessageAPI } from "./message-api";
 
 /**
  * Navigation
@@ -94,6 +95,12 @@ const buttonVisualize = document.getElementById(
 // fix: trigger navigation even if user accesses the page with a hash
 // (for example, when user accesses "https://site.com/#visualize" directly)
 window.location.hash = "#edit";
+
+const editorTextarea = document.querySelector(
+  "#code-editor-container textarea"
+) as HTMLElement;
+
+new MessageAPI().listen(editorTextarea);
 
 const editor = createEditor(
   "code-editor-container",
