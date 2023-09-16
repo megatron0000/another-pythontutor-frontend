@@ -96,12 +96,6 @@ const buttonVisualize = document.getElementById(
 // (for example, when user accesses "https://site.com/#visualize" directly)
 window.location.hash = "#edit";
 
-const editorTextarea = document.querySelector(
-  "#code-editor-container textarea"
-) as HTMLElement;
-
-new MessageAPI().listen(editorTextarea);
-
 const editor = createEditor(
   "code-editor-container",
   "// Controles: veja página de ajuda\n// (botão '?')",
@@ -109,6 +103,10 @@ const editor = createEditor(
     buttonVisualize.disabled = editor.hasErrors();
   }
 );
+
+new MessageAPI().listen(() => {
+  editor.focus();
+});
 
 buttonVisualize.addEventListener("click", async () => {
   // fix: the hash must change first (which triggers the CSS to display the #visualize HTML),
