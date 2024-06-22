@@ -27,3 +27,7 @@
 .margin-left-auto {
   margin-left: auto;
 }
+
+.margin-left-small {
+  margin-left: 10px;
+}
