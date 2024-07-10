@@ -183,8 +183,7 @@ buttonNextMacro.addEventListener("click", () => {
   updateStepButtons();
 });
 
-const ICON_ARROWS_DOWN_TO_LINE =
-  '<i class="fa-solid fa-arrows-down-to-line"></i>';
+const ICON_PLAY = '<i class="fa fa-play"></i>';
 
 const ICON_PAUSE = '<i class="fa fa-pause"></i>';
 
@@ -205,7 +204,7 @@ buttonRunAll.addEventListener("click", async () => {
     await sleep(10); // async so that the UI does not freeze (the user can pause)
   }
   isRunningAll = false;
-  buttonRunAll.innerHTML = ICON_ARROWS_DOWN_TO_LINE;
+  buttonRunAll.innerHTML = ICON_PLAY;
   enableEditButton();
   updateStepButtons();
 });

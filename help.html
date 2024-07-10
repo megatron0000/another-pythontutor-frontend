@@ -24,18 +24,16 @@
       </section>
     </details>
     <details>
-      <summary>Quais são os controles ?</summary>
+      <summary>Como uso ?</summary>
       <section>
-        <strong>Clique-e-arraste para mover</strong>
-        <img src="media/drag-to-pan.gif" width="600" class="left" />
-        <strong>Role o mouse para zoom</strong>
-        <img src="media/mouse-wheel-zoom.gif" width="600" class="left" />
-        <strong>Mova e redimensione o Console</strong>
-        <img src="media/move-console.gif" width="600" class="left" />
-        <strong>Botões:</strong>
+        <h4>Escreva um código javascript que desejar e clique em "Executar"</h4>
+        <img src="media/sample-code.png" />
+
+        <h4>Use os botões para avançar ou retroceder a execução do código</h4>
+        <img src="media/buttons.png" />
         <table>
           <tr>
-            <td><i class="fa fa-step-forward"></i></td>
+            <td><i class="fa fa-arrow-right"></i></td>
             <td>
               Avança um micro-passo na simulação. Por exemplo, num cálculo
               aritmético como <code>2 + 3/5</code>, ele passa individualmente
@@ -43,11 +41,11 @@
             </td>
           </tr>
           <tr>
-            <td><i class="fa fa-step-backward"></i></td>
+            <td><i class="fa fa-arrow-left"></i></td>
             <td>Volta um micro-passo na simulação</td>
           </tr>
           <tr>
-            <td><i class="fa fa-fast-forward"></i></td>
+            <td><i class="fa fa-arrow-turn-down"></i></td>
             <td>
               Avança um macro-passo na simulação. Um macro-passo equivale a
               vários micro-passos, geralmente significa que a simulação vai
@@ -57,11 +55,16 @@
             </td>
           </tr>
           <tr>
-            <td><i class="fa fa-fast-backward"></i></td>
+            <td>
+              <i
+                class="fa fa-arrow-turn-up"
+                style="transform: scale(-1, 1)"
+              ></i>
+            </td>
             <td>Volta um macro-passo na simulação</td>
           </tr>
           <tr>
-            <td><i class="fa-solid fa-arrows-down-to-line"></i></td>
+            <td><i class="fa fa-play"></i></td>
             <td>
               Avança a simulação continuamente até o fim (é possível pausar
               clicando de novo no mesmo botão)
@@ -72,10 +75,36 @@
             <td>Volta ao editor de código</td>
           </tr>
         </table>
+
+        <h4>A área à direita do código mostra as variáveis do programa</h4>
+        <img src="media/variables.png" />
+
+        <h4>
+          A janela de input permite fornecer um número para o programa calcular
+        </h4>
+        <img src="media/input-window.png" alt="" />
+
+        <h4>
+          A linha com fundo verde é a próxima linha que o computador irá
+          executar
+        </h4>
+        <img src="media/next-code-line.png" />
+
+        <h4>A janela "Console" é onde o programa imprime respostas</h4>
+        <img src="media/console-window.png" />
+
+        <h4>Clique-e-arraste para mover a tela</h4>
+        <img src="media/drag-to-pan.gif" width="600" />
+
+        <h4>Role o mouse para zoom</h4>
+        <img src="media/mouse-wheel-zoom.gif" width="600" />
+
+        <h4>Mova e redimensione o Console</h4>
+        <img src="media/move-console.gif" width="600" />
       </section>
     </details>
     <details>
-      <summary>O que é possível fazer ?</summary>
+      <summary>Quais códigos posso escrever ?</summary>
       <section>
         <p>
           O simulador aceita código em javascript versão ES5, com limitações
@@ -91,6 +120,71 @@
           Não existem <code>prompt</code>, <code>confirm</code>,
           <code>alert</code> ou <code>console</code>.
         </p>
+      </section>
+    </details>
+    <details>
+      <summary>Limitações</summary>
+      <section>
+        <ul>
+          <li>
+            Somente código ES5. Código ES6 não funciona. Isso significa que não
+            funcionam por exemplo: <code>async</code>/<code>await</code>,
+            <code>class</code>, <code>const</code>/<code>let</code>,
+            <code>import</code>/<code>export</code>
+          </li>
+          <li>O código sempre executa em modo estrito (strict mode)</li>
+          <li>
+            Somente código síncrono, não há <code>setTimeout</code>,
+            <code>setInterval</code>, <code>Promise</code>, funções
+            <code>async</code>, etc.
+          </li>
+          <li>
+            Não são aceitas as sintaxes <code>with</code>,
+            <code>try/catch/finally</code>, <code>throw</code>,
+            <code>getter/setter</code> e expressões regulares. É possível dar
+            suporte a elas, mas não eram necessárias para nosso objetivo inicial
+            (não implementamos por falta de tempo)
+          </li>
+
+          <li>
+            Vários nomes globais não podem ser usados (isso é arbitrário,
+            poderiam ser permitidos facilmente). São eles:
+            <code>window</code>, <code>self</code>, <code>Function</code>,
+            <code>Object</code>, <code>constructor</code>, <code>Array</code>,
+            <code>String</code>, <code>Boolean</code>, <code>Number</code>,
+            <code>Date</code>, <code>RegExp</code>, <code>Error</code>,
+            <code>EvalError</code>, <code>RangeError</code>,
+            <code>ReferenceError</code>, <code>SyntaxError</code>,
+            <code>TypeError</code>, <code>URIError</code>, <code>Math</code>,
+            <code>JSON</code>, <code>eval</code>, <code>parseInt</code>,
+            <code>parseFloat</code>, <code>isNaN</code>, <code>isFinite</code>,
+            <code>escape</code>, <code>unescape</code>, <code>decodeURI</code>,
+            <code>decodeURIComponent</code>, <code>encodeURI</code>,
+            <code>encodeURIComponent</code>
+          </li>
+
+          <li>
+            Várias convenções de código são exigidas (linter). Infrações são
+            relatadas como erros no editor de código. Algumas dessas convenções
+            são:
+            <ul>
+              <li>
+                Variáveis devem ser declaradas no topo do programa (ou da
+                função) antes de outros comandos
+              </li>
+              <li>
+                Não é possível atribuir mais de uma variável no mesmo comando,
+                por exemplo <code>var x = y = 10;</code>
+              </li>
+              <li>
+                Não é possível usar os operadores
+                <code>==</code> e <code>!=</code>, devem ser usados
+                <code>===</code> e
+                <code>!==</code>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </section>
     </details>
     <details>
@@ -131,51 +225,8 @@
         </p>
       </section>
     </details>
-    <details>
-      <summary>Limitações</summary>
-      <section>
-        <ul>
-          <li>
-            Somente código ES5. Código ES6 não funciona (por causa do
-            interpretador JS-Interpreter)
-          </li>
-          <li>O código sempre executa em modo estrito (strict mode)</li>
-          <li>
-            Somente código síncrono, não há <code>setTimeout</code>,
-            <code>setInterval</code>, <code>Promise</code>, funções
-            <code>async</code>, etc.
-          </li>
-          <li>
-            Não são aceitas as sintaxes <code>with</code>,
-            <code>try/catch/finally</code>, <code>throw</code>,
-            <code>getter/setter</code> e expressões regulares. É possível dar
-            suporte a elas, mas não eram necessárias para nosso objetivo inicial
-            (não implementamos por falta de tempo)
-          </li>
-          <li>
-            Várias convenções de código são exigidas (linter). Infrações são
-            relatadas como erros no editor de código.
-          </li>
-          <li>
-            Vários nomes globais não podem ser usados (isso é arbitrário,
-            poderiam ser permitidos facilmente). São eles:
-            <code>window</code>, <code>self</code>, <code>Function</code>,
-            <code>Object</code>, <code>constructor</code>, <code>Array</code>,
-            <code>String</code>, <code>Boolean</code>, <code>Number</code>,
-            <code>Date</code>, <code>RegExp</code>, <code>Error</code>,
-            <code>EvalError</code>, <code>RangeError</code>,
-            <code>ReferenceError</code>, <code>SyntaxError</code>,
-            <code>TypeError</code>, <code>URIError</code>, <code>Math</code>,
-            <code>JSON</code>, <code>eval</code>, <code>parseInt</code>,
-            <code>parseFloat</code>, <code>isNaN</code>, <code>isFinite</code>,
-            <code>escape</code>, <code>unescape</code>, <code>decodeURI</code>,
-            <code>decodeURIComponent</code>, <code>encodeURI</code>,
-            <code>encodeURIComponent</code>
-          </li>
-        </ul>
-      </section>
-    </details>
-    <h3>Guia de erros</h3>
+
+    <h3>Tipos de erro</h3>
     <p>
       Ao programar, você vai se deparar com dois tipos de erro:
       <span class="compilation-error">erros de compilação</span> e
@@ -194,29 +245,23 @@
     <p>
       Já <span class="execution-error">erros de execução</span> não aparecem
       enquanto você digita o código. Eles acontecem depois, durante a simulação,
-      quando algum passo encontra um problema e o programa dá um erro, que vai
-      aparecer como uma mensagem vermelha na janelinha de console do simulador.
-      Por exemplo se você tem uma variável <code>x</code> que deveria ser um
-      array, mas você esqueceu de inicializá-la e deu o comando
-      <code>x.push(40);</code>. Vai aparecer o seguinte:
-    </p>
-    <img src="media/errors/type-error-undefined.png" />
-    <p>
-      O que a mensagem vermelha quer dizer é: a variável <code>x</code> vale
-      <code>undefined</code> porque não foi inicializada, aí não tem como usar o
-      comando <code>push</code> porque ele só é aplicável em arrays.
+      quando algum passo da execução do código encontra um problema e o programa
+      dá um erro.
     </p>
     <p>
-      Não se preocupe se não entendeu esse exemplo, ele já é meio "avançado"
-      (você só encontraria algo assim caso estivesse mexendo com arrays, que já
-      não são a coisa mais básica de javascript). Mas note que o erro sempre vem
-      dizendo a linha e a coluna onde houve o problema. No caso foi na linha 3,
-      coluna 0 (o primeiro caractere da linha é 0, não 1, por isso que a coluna
-      é 0)
+      Por exemplo imagine que você escreveu um programa que pede para o usuário
+      digitar um número, mas o usuário digitou "batata" (ou seja, não digitou um
+      número válido):
     </p>
+    <img src="media/errors/input-is-not-a-number-1.png" />
     <p>
-      Quando tiver um erro desses, pesquise na internet o que ele significa.
+      Assim que o usuário confirmar a entrada, o programa vai dar um erro porque
+      ele não consegue converter o texto "batata" em um número. O erro vai
+      aparecer em vermelho no Console assim:
     </p>
+    <img src="media/errors/input-is-not-a-number-2.png" />
+
+    <h3>Guia de erros de compilação</h3>
     <p>
       Para <span class="compilation-error">erros de compilação</span>, segue
       abaixo uma lista (não-exaustiva) em ordem alfabética de erros possíveis e
