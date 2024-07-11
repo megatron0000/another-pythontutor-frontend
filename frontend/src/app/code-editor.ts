@@ -2,7 +2,7 @@
 import * as ace from "ace-builds";
 import "ace-builds/webpack-resolver";
 
-import { lint } from "../linter";
+import { lint } from "../code/linter";
 
 export interface Editor {
   getValue(): string;
