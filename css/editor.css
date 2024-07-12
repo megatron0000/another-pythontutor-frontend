@@ -4,8 +4,7 @@
     necessary to cover the code, instead of taking up all the space of
     the container
   */
-  height: 100% !important;
-  width: 100% !important;
+  height: 100%;
 
   /* fix: the code area must not get visibly cut above by the top header */
   top: 2px;
