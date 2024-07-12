@@ -1,4 +1,4 @@
-import type { AnchorView, View } from "../view-module/types";
+import type { AnchorView, View } from "../../view-module/types";
 
 export interface Connection {
   source: View;

@@ -32,7 +32,11 @@ export interface AnchorView extends View {
 export interface StackFrameView extends View {
   getAnchorOut(key: string | number): AnchorView;
   setActive(active: boolean): void;
+  setHidden(hidden: boolean): void;
+  isHidden(): boolean;
   rerender(newData: StackFrame): void;
+
+  onClickedShowHide(callback: (intention: "hide" | "show") => void): void;
 }
 
 export interface HeapElementView extends View {
@@ -43,6 +47,9 @@ export interface HeapElementView extends View {
   getAnchorOut(key: string | number): AnchorView;
   getAnchorIn(): AnchorView;
   rerender(newData: HeapElement): void;
+
+  setHidden(hidden: boolean): void;
+  isHidden(): boolean;
 
   /**
    * Called before the View is dragged by the user (mouse).

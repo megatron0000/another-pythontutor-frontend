@@ -1,4 +1,4 @@
-import type { Connection } from "../../connection/types";
+import type { Connection } from "../connection/types";
 import { isPointer } from "../../../code/trace";
 import type {
   HeapElementId,
@@ -12,16 +12,16 @@ import type {
   View
 } from "../../view-module/types";
 import { setDifference } from "../../../utils";
-import type { ConnectionRouter } from "../../connection/connection-router";
+import type { ConnectionLayouter } from "../connection/connection-layouter";
 
-import { calculateConnections } from "../../connection/connection-router";
+import { calculateConnections } from "../connection/calculate-connections";
 
 export class HeapLayouter {
   private previousRenderedViews: Set<HeapElementView> = new Set();
 
   constructor(
     private heapContainer: HTMLElement,
-    private connectionRouter: ConnectionRouter
+    private connectionRouter: ConnectionLayouter
   ) {}
 
   clear() {
@@ -53,7 +53,7 @@ export class HeapLayouter {
       heapViewsIdMap.get(id)?.rerender(element)
     );
 
-    // calculate the vertical position of the heap elements
+    // calculate the vertical order of the heap elements
     const heapRows = calculateHeapRows(step);
 
     const orderedViews = heapRows.map(id => heapViewsIdMap.get(id)!);
@@ -83,6 +83,13 @@ export class HeapLayouter {
       view.x(x);
       view.y(y);
     }
+
+    // heap elements which are only "pointed at" by hidden (minimized) stack frames
+    // should be hidden
+    recalculateHeapElementsVisibilityBasedOnSourceVisibility(
+      heapViewsIdMap.values(),
+      connections
+    );
 
     this.connectionRouter.rerender(connections);
 
@@ -228,4 +235,44 @@ function calculateHeapCoordinates(
   }
 
   return coordinates;
+}
+
+function recalculateHeapElementsVisibilityBasedOnSourceVisibility(
+  heapViews: IterableIterator<HeapElementView>,
+  connections: Connection[]
+) {
+  const viewsToVisit = new Set(heapViews);
+  const visitedViews = new Set();
+
+  while (viewsToVisit.size > 0) {
+    // "as HeapElementView" is safe because we only iterate if the Set
+    // is not empty
+    const view = viewsToVisit.values().next().value as HeapElementView;
+
+    viewsToVisit.delete(view);
+    visitedViews.add(view);
+
+    const everyIncomingConnectionHasHiddenSource = connections
+      .filter(({ target }) => target === view)
+      .every(
+        ({ source }) =>
+          (source.is("stack frame") || source.is("heap element")) &&
+          source.isHidden()
+      );
+
+    if (everyIncomingConnectionHasHiddenSource) {
+      view.setHidden(true);
+
+      // when a view is hidden, it may transitively hide other views
+      connections
+        .filter(({ source }) => source === view)
+        .forEach(({ target }) => {
+          if (target.is("heap element") && !visitedViews.has(target)) {
+            viewsToVisit.add(target);
+          }
+        });
+    } else {
+      view.setHidden(false);
+    }
+  }
 }

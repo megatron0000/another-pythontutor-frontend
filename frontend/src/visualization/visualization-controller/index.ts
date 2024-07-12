@@ -1,12 +1,13 @@
 import type { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
 import * as inspect from "browser-util-inspect";
 import { Interpreter } from "../../code/interpreter";
-import { ConnectionRouter } from "../connection/connection-router";
+import { ConnectionLayouter } from "../layouters/connection/connection-layouter";
 import { createConsoleLayouter } from "../layouters/console";
 import { HeapLayouter } from "../layouters/heap";
 import { StackLayouter } from "../layouters/stack";
-import { ZoomService } from "./lib/zoom-service";
+import { ZoomHandler } from "./lib/zoom-handler";
 import { StepRenderer } from "./lib/step-renderer";
+import { StackFrameShowHideTracker } from "./lib/stack-frame-show-hide-tracker";
 
 export class VisualizationController {
   // @ts-expect-error : the interpreter IS definitely assigned
@@ -23,12 +24,13 @@ export class VisualizationController {
     consoleWindowContainer: HTMLElement,
     jsplumbInstance: BrowserJsPlumbInstance
   ) {
-    const zoomService = new ZoomService(zoomContainer, visualizerContainer);
+    const zoomService = new ZoomHandler(zoomContainer, visualizerContainer);
     zoomService.enableMouseZooming();
     this.stepRenderer = new StepRenderer(
       zoomService,
+      new StackFrameShowHideTracker(),
       new StackLayouter(stackContainer),
-      new HeapLayouter(heapContainer, new ConnectionRouter(jsplumbInstance)),
+      new HeapLayouter(heapContainer, new ConnectionLayouter(jsplumbInstance)),
       createConsoleLayouter(consoleWindowContainer)
     );
 

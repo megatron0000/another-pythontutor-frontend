@@ -9,6 +9,8 @@ import type {
 import type { ConsoleLayouter } from "../../layouters/console/types";
 import type { HeapLayouter } from "../../layouters/heap/types";
 import type { StackLayouter } from "../../layouters/stack/types";
+import { DragTracker } from "./drag-tracker";
+import type { ZoomHandler } from "./zoom-handler";
 import {
   createCodeAreaView,
   createHeapFunctionView,
@@ -21,14 +23,14 @@ import type {
   HeapElementView,
   StackFrameView
 } from "../../view-module/types";
-import { DragTracker } from "./drag-tracker";
-import type { ZoomService } from "./zoom-service";
+import type { StackFrameShowHideTracker } from "./stack-frame-show-hide-tracker";
 
 export class StepRenderer {
   private dragTracker = new DragTracker();
 
   constructor(
-    private zoomService: ZoomService,
+    private zoomService: ZoomHandler,
+    private stackFrameShowHideTracker: StackFrameShowHideTracker,
     private stackLayouter: StackLayouter,
     private heapLayouter: HeapLayouter,
     private consoleLayouter: ConsoleLayouter
@@ -37,7 +39,7 @@ export class StepRenderer {
   private heapViewIdMap: Map<HeapElementId, HeapElementView> = new Map();
   private stackViewIdMap: Map<StackFrameId, [StackFrameView, CodeAreaView]> =
     new Map();
-  private previousStep: Step | null = null;
+  private lastRenderedStep: Step | null = null;
 
   clear() {
     this.zoomService.resetZoom();
@@ -46,17 +48,17 @@ export class StepRenderer {
     this.consoleLayouter.clear();
     this.heapViewIdMap = new Map();
     this.stackViewIdMap = new Map();
-    this.previousStep = null;
+    this.lastRenderedStep = null;
   }
 
   renderStep(step: Step) {
     // stop tracking heap views and frame views which existed in the previous step
     // but do not exist in this step
-    if (this.previousStep !== null) {
-      const heapDiff = diffHeap(this.previousStep, step);
+    if (this.lastRenderedStep !== null) {
+      const heapDiff = diffHeap(this.lastRenderedStep, step);
       heapDiff.destroyed.forEach(id => this.heapViewIdMap.delete(id));
 
-      const stackDiff = diffStack(this.previousStep, step);
+      const stackDiff = diffStack(this.lastRenderedStep, step);
       stackDiff.destroyed.forEach(id => this.stackViewIdMap.delete(id));
     }
 
@@ -78,6 +80,17 @@ export class StepRenderer {
     // if they are dragged by the user
     for (const view of this.heapViewIdMap.values()) {
       this.dragTracker.trackDrag(view);
+    }
+
+    // patch stack frame views so they react to "show/hide" clicks
+    for (const [stackFrameView, _] of this.stackViewIdMap.values()) {
+      this.stackFrameShowHideTracker.onToggleVisibility(
+        stackFrameView,
+        intention => {
+          stackFrameView.setHidden(intention === "hide");
+          this.renderStep(this.lastRenderedStep!);
+        }
+      );
     }
 
     // rerender the stack (code view + frame view)
@@ -109,7 +122,7 @@ export class StepRenderer {
     // rerender the console
     this.consoleLayouter.rerender(step.stdout, step.exception_message);
 
-    this.previousStep = step;
+    this.lastRenderedStep = step;
   }
 
   private maybeCreateHeapElementView(id: HeapElementId, element: HeapElement) {

@@ -288,6 +288,11 @@ export function createShallowStackFrameView(frame: StackFrame): StackFrameView {
     .classed("stack__frame", true)
     .classed("active", false);
 
+  const frameShowHideButton = frameContainer
+    .append("button")
+    .classed("stack__frame__showhide_button", true)
+    .text("-");
+
   const frameHeader = frameContainer
     .append("div")
     .classed("stack__frame__header", true)
@@ -322,10 +327,26 @@ export function createShallowStackFrameView(frame: StackFrame): StackFrameView {
 
   valueContainer.append(datum => createValueNode(frame.locals[datum]).node());
 
+  let hidden = false;
+
   const view: StackFrameView = {
     ...nodeWidthHeight_factory(frameContainer.node()),
     setActive(active: boolean) {
       frameContainer.classed("active", active);
+    },
+    isHidden() {
+      return hidden;
+    },
+    setHidden(_hidden) {
+      hidden = _hidden;
+      frameShowHideButton.text(_hidden ? "+" : "-");
+      frameContainer.classed("hidden", _hidden);
+    },
+    onClickedShowHide(callback) {
+      frameShowHideButton.on("mousedown", () => {
+        const intention = hidden ? "show" : "hide";
+        callback(intention);
+      });
     },
     getAnchorOut(key) {
       throw new Error("not implemented");
@@ -742,6 +763,8 @@ function createHeapElementView(
     throw new Error("anchor_in element must not be null");
   }
 
+  let hidden = false;
+
   const view: HeapElementView = {
     ...nodeWidthHeight_factory(container),
     x(newX?: number) {
@@ -787,6 +810,15 @@ function createHeapElementView(
     },
     is(kind) {
       return kind === "heap element";
+    },
+    isHidden() {
+      return hidden;
+    },
+    setHidden(_hidden) {
+      hidden = _hidden;
+      console.log(container);
+
+      container.classList.toggle("hidden", hidden);
     }
   };
 

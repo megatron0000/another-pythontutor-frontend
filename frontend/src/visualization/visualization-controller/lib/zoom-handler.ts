@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import type { HeapElementView } from "../../view-module/types";
 
-export class ZoomService {
+export class ZoomHandler {
   private patchedViews: WeakSet<HeapElementView> = new WeakSet();
 
   constructor(
