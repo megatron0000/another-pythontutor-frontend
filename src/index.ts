@@ -5,10 +5,10 @@
 
 import * as jsplumb from "@jsplumb/browser-ui";
 
-import { VisualizationController } from "./controller";
+import { VisualizationController } from "./visualization/visualization-controller";
 import { createEditor } from "./app/code-editor";
 import { showErrorModal } from "./app/error-modal";
-import { MessageAPI } from "./message-api";
+import { MessageAPI } from "./app/message-api";
 
 /**
  * Navigation

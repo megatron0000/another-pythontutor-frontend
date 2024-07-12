@@ -232,6 +232,7 @@
 }
 
 .stack__frame {
+  position: relative;
   border-left: 1px solid #a6b3b6;
   display: inline-block;
   margin-right: auto;
@@ -250,6 +251,44 @@
   background-color: #e2ebf6;
   /* background-color: #d7e7fb; */
   /* background-color: #c0daf8; */
+}
+
+.stack__frame__showhide_button {
+  position: absolute;
+  z-index: 1;
+  top: 0px;
+  right: -12px;
+  width: 12px;
+  height: 12px;
+  padding: 0px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #cccccc;
+  border-radius: 1px;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.stack__frame__showhide_button:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.stack__frame.hidden {
+  background: transparent;
+  border: none;
+}
+
+.stack__frame.hidden :not(.stack__frame__showhide_button) {
+  opacity: 0;
+}
+
+.stack__frame.hidden .stack__frame__showhide_button {
+  left: 0;
 }
 
 .stack__frame__header {
@@ -339,6 +378,10 @@
 
 .heap__element.function .anchor__in {
   width: 1pt;
+}
+
+.heap__element__container.hidden {
+  opacity: 0;
 }
 
 .anchor__out {
