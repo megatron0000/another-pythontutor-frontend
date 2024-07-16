@@ -146,6 +146,7 @@ function updateStepButtons() {
   buttonNextMicro.disabled = controller.isLastStep();
   buttonPrevMacro.disabled = controller.isFirstStep();
   buttonNextMacro.disabled = controller.isLastStep();
+  buttonRunAll.disabled = controller.isLastStep();
 }
 
 function disableStepButtons() {

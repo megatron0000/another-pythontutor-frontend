@@ -50,17 +50,7 @@
 }
 
 .console-content-container {
-  border: 2px solid #4784d4;
   font-size: 13.333px;
-  border: 2px solid #4784d4;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  /* 
-   fix: make the content stretch down until the container bottom, 
-   because jsframe lib does not do this 
-  */
-  height: 100%;
-  box-sizing: border-box;
 }
 
 .console__line {

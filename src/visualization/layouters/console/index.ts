@@ -35,7 +35,11 @@ export function createConsoleLayouter(container: HTMLElement) {
         }
       },
       style: {
-        overflow: "auto"
+        overflow: "auto",
+        border: "2px solid #4784d4",
+        borderBottomLeftRadius: "6px",
+        borderBottomRightRadius: "6px",
+        boxSizing: "border-box"
       },
       width: 320,
       height: 80,
