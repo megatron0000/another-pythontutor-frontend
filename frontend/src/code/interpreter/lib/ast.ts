@@ -19,7 +19,11 @@ export function isASTNode(node: unknown): node is Node {
 }
 
 /**
+ * @param end A position in the code. Variables declared before this position
+ * will be collected, others will not
+ *
  * @param orderedLocals Must not be used, is used internally for recursion.
+ *
  * @returns All variables declared in `node` and its children, in order
  * of source-code declaration.
  *
@@ -27,16 +31,17 @@ export function isASTNode(node: unknown): node is Node {
  */
 export function collectLocals(
   node: Node,
+  end: number,
   orderedLocals: string[] = []
 ): string[] {
-  const recurse = (node: Node) => collectLocals(node, orderedLocals);
+  const recurse = (node: Node) => collectLocals(node, end, orderedLocals);
 
   // All the structures within which a variable or function could hide.
   switch (node.type) {
     case "VariableDeclaration":
-      node.declarations.forEach(declaration =>
-        orderedLocals.push(declaration.id.name)
-      );
+      node.declarations
+        .filter(declaration => declaration.end <= end)
+        .forEach(declaration => orderedLocals.push(declaration.id.name));
       break;
     case "FunctionDeclaration":
       orderedLocals.push(node.id.name);
