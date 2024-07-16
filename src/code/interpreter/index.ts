@@ -388,9 +388,20 @@ export class Interpreter {
     // This is not a problem now because we forbid using with/try-catch/getter/setter
     // in the interpreted code anyway.
 
+    // if this state is the end-state, we must collect all variables because
+    // they have all been defined already.
+    // Otherwise we must collect only variables that have already been defined
+    // (i.e. defined before state.node.start)
+    const variablesUntilThisPosition =
+      isStateType(state, "Program") && state.done ? Infinity : state.node.start;
+
     if (state.scope === this.stepper.globalScope) {
       const functionNode = this.stepper.ast;
-      return ["<global>", collectLocals(functionNode), functionNode];
+      return [
+        "<global>",
+        collectLocals(functionNode, variablesUntilThisPosition),
+        functionNode
+      ];
     }
 
     // find the call/new expression that called the function (i.e. the latest
@@ -445,7 +456,7 @@ export class Interpreter {
     const functionLocals = [
       "this",
       ...functionNode.params.map(param => param.name),
-      ...collectLocals(functionNode.body)
+      ...collectLocals(functionNode.body, variablesUntilThisPosition)
     ];
 
     return [functionName, functionLocals, functionNode];
