@@ -1,5 +1,7 @@
 // https://github.com/ajaxorg/ace/issues/4782#issuecomment-1141347415
 import * as ace from "ace-builds";
+import { js_beautify } from "js-beautify";
+
 import "ace-builds/webpack-resolver";
 
 import { lint } from "../code/linter";
@@ -37,6 +39,24 @@ export function createEditor(
     if (lintResult !== LintResult.IGNORED) {
       hasErrors = lintResult === LintResult.HAS_ERROR;
       onCodeChange();
+    }
+  });
+
+  editor.commands.addCommand({
+    name: "beautify",
+    bindKey: { win: "Ctrl-S", mac: "Command-S" },
+    exec: () => {
+      const code = editor.getValue();
+      const beautified = js_beautify(code, {
+        indent_size: 4,
+        indent_with_tabs: true,
+        max_preserve_newlines: 1,
+        preserve_newlines: true,
+        brace_style: "end-expand",
+        end_with_newline: true,
+        indent_empty_lines: true
+      });
+      editor.session.doc.setValue(beautified);
     }
   });
 
