@@ -60,6 +60,8 @@ export function createEditor(
     }
   });
 
+  editor.commands.removeCommand("overwrite");
+
   return {
     getValue: () => editor.getValue(),
     hasErrors: () => hasErrors,
