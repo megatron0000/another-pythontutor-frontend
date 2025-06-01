@@ -480,7 +480,7 @@ export class Interpreter {
 /**
  * Stringifies an interpreted Error (i.e. an error of the interpreted code)
  */
-export function errorToString(error: unknown): string {
+function errorToString(error: unknown): string {
   if (error === null || typeof error !== "object") {
     return String(error);
   }
