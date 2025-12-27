@@ -164,6 +164,9 @@ export function createConsoleLayouter(container: HTMLElement) {
       errorUpdateSelection
         .append("div")
         .classed("console__line__linenumber", true);
+
+      contentArea.node()!.parentElement!.scrollTop =
+        contentArea.node()!.scrollHeight;
     },
 
     clear() {
