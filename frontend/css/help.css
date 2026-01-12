@@ -64,8 +64,17 @@ details > section > h4:not(:first-child) {
 img {
   display: block;
   margin: 15px auto;
-  border: 1px solid black;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
   max-width: 100%;
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+img:hover,
+img:focus {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
 }
 
 img.left {
