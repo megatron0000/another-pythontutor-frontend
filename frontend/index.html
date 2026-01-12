@@ -113,6 +113,128 @@
           </section>
         </section>
       </article>
+
+      <article id="welcome-modal" style="display: none">
+        <section class="welcome-modal-content">
+          <section class="welcome-modal-body">
+            <h3>O que é isso ?</h3>
+            <p>
+              É um interpretador de código javascript, ou seja, você escreve
+              código e clica em "Executar" para vê-lo executar passo a passo. É
+              possível avançar e retroceder na simulação.
+            </p>
+            <img src="media/sample.gif" width="300" />
+
+            <h3>Como uso ?</h3>
+
+            <h4>
+              Escreva um código javascript que desejar e clique em "Executar"
+            </h4>
+            <img src="media/sample-code.png" />
+
+            <h4>
+              Use os botões para avançar ou retroceder a execução do código
+            </h4>
+            <img src="media/buttons.png" />
+            <table>
+              <tr>
+                <td><i class="fa fa-arrow-right"></i></td>
+                <td>
+                  Avança um micro-passo na simulação. Por exemplo, num cálculo
+                  aritmético como <code>2 + 3/5</code>, ele passa
+                  individualmente por cada etapa da conta
+                </td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-arrow-left"></i></td>
+                <td>Volta um micro-passo na simulação</td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-arrow-turn-down"></i></td>
+                <td>
+                  Avança um macro-passo na simulação. Um macro-passo equivale a
+                  vários micro-passos, geralmente significa que a simulação vai
+                  avançar uma linha inteira de uma só vez. Por exemplo, num
+                  cálculo aritmético como <code>2 + 3/5</code>, ele pula toda a
+                  conta de uma vez.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i
+                    class="fa fa-arrow-turn-up"
+                    style="transform: scale(-1, 1)"
+                  ></i>
+                </td>
+                <td>Volta um macro-passo na simulação</td>
+              </tr>
+              <tr>
+                <td><i class="fa fa-play"></i></td>
+                <td>
+                  Avança a simulação continuamente até o fim (é possível pausar
+                  clicando de novo no mesmo botão)
+                </td>
+              </tr>
+              <tr>
+                <td><i class="fa-solid fa-pen-to-square"></i></td>
+                <td>Volta ao editor de código</td>
+              </tr>
+            </table>
+
+            <h4>A área à direita do código mostra as variáveis do programa</h4>
+            <img src="media/variables.png" />
+
+            <h4>
+              A janela de input permite fornecer um número para o programa
+              calcular
+            </h4>
+            <img src="media/input-window.png" alt="" />
+
+            <h4>
+              A linha com fundo verde é a próxima linha que o computador irá
+              executar
+            </h4>
+            <img src="media/next-code-line.png" />
+
+            <h4>A janela "Console" é onde o programa imprime respostas</h4>
+            <img src="media/console-window.png" />
+
+            <h4>Clique-e-arraste para mover a tela</h4>
+            <img src="media/drag-to-pan.gif" width="600" />
+
+            <h4>Role o mouse para zoom</h4>
+            <img src="media/mouse-wheel-zoom.gif" width="600" />
+
+            <h4>Mova e redimensione o Console</h4>
+            <img src="media/move-console.gif" width="600" />
+
+            <h4>
+              Clique e segure no botão <i class="fa fa-play"></i> para executar
+              em modo turbo
+            </h4>
+            <img src="media/demo-turbo-mode.gif" width="400" />
+
+            <h4>
+              Use o comando <code>debugger</code> no modo turbo para pausar
+              quando o código chegar naquela linha
+            </h4>
+            <img src="media/demo-turbo-debugger.gif" width="400" />
+
+            <p>
+              Você pode ver mais detalhes na página de ajuda (botão
+              <i class="fa-solid fa-question"></i>).
+            </p>
+          </section>
+
+          <section class="welcome-modal-footer">
+            <label>
+              <input type="checkbox" id="welcome-modal-dont-show" />
+              não mostrar novamente neste computador.
+            </label>
+            <button class="button" id="welcome-modal-close">Fechar</button>
+          </section>
+        </section>
+      </article>
     </main>
 
     <div id="mouse-loader" class="mouse-loader" style="display: none">
