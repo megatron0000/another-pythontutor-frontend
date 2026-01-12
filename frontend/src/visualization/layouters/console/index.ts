@@ -10,7 +10,7 @@ export function createConsoleLayouter(container: HTMLElement) {
   const position =
     window.innerWidth >= 700
       ? { top: 60, left: window.innerWidth - 330 }
-      : { top: window.innerHeight - 90, left: 10 };
+      : { top: window.innerHeight - 170, left: 10 };
 
   const frame = jsFrame
     .create({
@@ -42,7 +42,7 @@ export function createConsoleLayouter(container: HTMLElement) {
         boxSizing: "border-box"
       },
       width: 320,
-      height: 80,
+      height: 160,
       ...position,
       html: `
         <div class="console-content-container"></div>
