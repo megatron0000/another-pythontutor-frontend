@@ -816,7 +816,6 @@ function createHeapElementView(
     },
     setHidden(_hidden) {
       hidden = _hidden;
-      console.log(container);
 
       container.classList.toggle("hidden", hidden);
     }

@@ -397,18 +397,22 @@ export class Stepper {
     //   .filter(state => state.node.loc.source !== "polyfills");
   }
 
-  serialize(): [SerializedInterpreter, SerializedInternalState] {
+  serialize(
+    forceSaveAs?: "micro" | "macro"
+  ): [SerializedInterpreter, SerializedInternalState] {
     if (this._stepKind === null) {
       throw new Error(
         "serialize: cannot serialize because stepper is not started"
       );
     }
 
+    const stepKind = forceSaveAs ? { kind: forceSaveAs } : this._stepKind;
+
     return [
       JSON.stringify(serialize(this.interpreter)),
       [
         this.prevStateStackTop,
-        this._stepKind,
+        stepKind,
         this.anchorStack.map(x => ({
           depth: x.depth,
           index: x.index,

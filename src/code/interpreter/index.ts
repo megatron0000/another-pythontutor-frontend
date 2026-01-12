@@ -137,29 +137,50 @@ export class Interpreter {
   }
 
   /**
+   *
+   * Advances the interpreter one micro/macro step forward.
+   * By default before advancing, saves the current state and
+   * opens a new console collector bin.
+   *
+   * If advancing to a macro step, will save all intermediate micro steps as well.
+   *
+   * `forceSaveAs` can be used to force saving the initial state as micro or macro
+   * (does not affect intermediate steps when advancing to a macro step).
+   *
+   *
    * @throws
    */
-  stepForward(mode: "micro" | "macro"): void {
+  stepForward(
+    mode: "micro" | "macro",
+    {
+      saveState = true,
+      forceSaveAs
+    }: { saveState?: boolean; forceSaveAs?: "micro" | "macro" } = {}
+  ): void {
     if (this.isLastStep()) {
       throw new Error("stepForward: execution already ended");
     }
 
     // if is started already, store the current state before
     // stepping into the next state
-    if (this.executionState === "started") {
-      this.saveState();
+    if (saveState && this.executionState === "started") {
+      this.saveState(forceSaveAs);
     }
 
     // open a new collector bin to store the stdout of the new step
-    this.consoleCollector.newCollector();
+    if (saveState) {
+      this.consoleCollector.newCollector();
+    }
 
     this.executionState = "started";
     this.exceptionState = null;
 
     let stepKind: StepKind = this.stepper.step();
     while (mode === "macro" && stepKind.kind === "micro") {
-      this.saveState();
-      this.consoleCollector.newCollector();
+      if (saveState) {
+        this.saveState();
+        this.consoleCollector.newCollector();
+      }
       stepKind = this.stepper.step();
     }
 
@@ -173,6 +194,33 @@ export class Interpreter {
       this.exceptionState = stepKind;
       return;
     }
+  }
+
+  /**
+   * Returns true if the current state is on a DebuggerStatement
+   */
+  isOnDebugger(): boolean {
+    const stateStack = this.stepper.getStateStack();
+    if (stateStack.length === 0) return false;
+    const currentState = stateStack[stateStack.length - 1];
+    return isStateType(currentState, "DebuggerStatement");
+  }
+
+  /**
+   * Returns information about what function (Identifier) is about to be called, if any.
+   * Returns null if the current state is not a CallExpression ready to call a named Identifier.
+   */
+  getCallTarget(): { calleeName: string } | null {
+    const stateStack = this.stepper.getStateStack();
+    if (stateStack.length === 0) return null;
+    const currentState = stateStack[stateStack.length - 1];
+    if (!isStateType(currentState, "CallExpression")) return null;
+
+    const node = currentState.node;
+    if (node.callee.type === "Identifier") {
+      return { calleeName: node.callee.name };
+    }
+    return null;
   }
 
   stepBackward(mode: "micro" | "macro"): void {
@@ -462,14 +510,14 @@ export class Interpreter {
     return [functionName, functionLocals, functionNode];
   }
 
-  private saveState() {
-    const stepKind = this.stepper.stepKind.kind;
+  private saveState(forceSaveAs?: "micro" | "macro"): void {
+    const stepKind = forceSaveAs ?? this.stepper.stepKind.kind;
     if (stepKind !== "micro" && stepKind !== "macro") {
       throw new Error("saveState: tried to save an end or exception state");
     }
 
     const [serializedInterpreter, serializedStepperState] =
-      this.stepper.serialize();
+      this.stepper.serialize(forceSaveAs);
     this.interpreterDiffStack.append(serializedInterpreter);
     this.stepperInternalStateStack.push(serializedStepperState);
     this.exceptionStateStack.push(this.exceptionState);
@@ -480,7 +528,7 @@ export class Interpreter {
 /**
  * Stringifies an interpreted Error (i.e. an error of the interpreted code)
  */
-export function errorToString(error: unknown): string {
+function errorToString(error: unknown): string {
   if (error === null || typeof error !== "object") {
     return String(error);
   }
