@@ -70,6 +70,16 @@
   margin: 15px auto;
   max-width: 100%;
   height: auto;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+.welcome-modal-body img:hover,
+.welcome-modal-body img:focus {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
 }
 
 .welcome-modal-body table td {
