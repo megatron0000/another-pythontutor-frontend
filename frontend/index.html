@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/editor.css" />
     <link rel="stylesheet" href="css/buttons.css" />
     <link rel="stylesheet" href="css/utils.css" />
+    <link rel="stylesheet" href="css/turbo.css" />
     <link rel="stylesheet" href="./vendor/fontawesome/css/all.min.css" />
   </head>
   <body>
@@ -69,7 +70,19 @@
         </div>
         <div class="zoom-container">
           <div class="visualizer__container grid">
-            <div class="visualizer__stack__container grid__col1"></div>
+            <div class="visualizer__stack__container grid__col1">
+              <div
+                id="turbo-overlay"
+                class="turbo-overlay"
+                style="display: none"
+              >
+                <div class="turbo-message">
+                  <i class="fa fa-bolt turbo-icon"></i>
+                  <span>Modo Turbo</span>
+                  <i class="fa fa-spinner fa-spin turbo-spinner"></i>
+                </div>
+              </div>
+            </div>
             <div class="visualizer__heap__container grid__col2"></div>
           </div>
         </div>
@@ -101,6 +114,23 @@
         </section>
       </article>
     </main>
+
+    <div id="mouse-loader" class="mouse-loader" style="display: none">
+      <svg viewBox="0 0 36 36">
+        <path
+          class="circle-bg"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke-width="4"
+        />
+        <path
+          class="circle"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke-width="4"
+        />
+      </svg>
+    </div>
 
     <script src="build/bundle.js"></script>
   </body>
