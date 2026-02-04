@@ -31,3 +31,7 @@
 .margin-left-small {
   margin-left: 10px;
 }
+
+.hidden {
+  display: none !important;
+}
