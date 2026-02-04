@@ -9,8 +9,14 @@
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 1000;
-  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
-    Arial, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    system-ui,
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
 }
 
 #welcome-modal {
@@ -24,8 +30,14 @@
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 900;
-  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
-    Arial, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    system-ui,
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
 }
 
 .error-modal-content {
@@ -57,12 +69,12 @@
 }
 
 .welcome-modal-body h3:not(:first-child) {
-  margin-top: 32px;
+  margin-top: 50px;
 }
 
 .welcome-modal-body h4 {
   font-weight: bold;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 .welcome-modal-body img {
@@ -73,7 +85,9 @@
   border: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   border-radius: 6px;
-  transition: box-shadow 0.12s ease, transform 0.12s ease;
+  transition:
+    box-shadow 0.12s ease,
+    transform 0.12s ease;
 }
 
 .welcome-modal-body img:hover,
