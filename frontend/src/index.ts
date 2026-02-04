@@ -59,8 +59,9 @@ window.addEventListener("hashchange", event => {
 
   document
     .querySelectorAll<HTMLElement>("main > section")
-    .forEach(el => (el.style.display = "none"));
-  document.querySelector<HTMLElement>(hash)!.style.display = "block";
+    .forEach(el => el.classList.add("hidden"));
+
+  document.querySelector<HTMLElement>(hash)!.classList.remove("hidden");
 });
 
 /**
