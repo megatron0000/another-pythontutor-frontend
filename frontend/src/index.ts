@@ -200,7 +200,8 @@ function updateStepButtons() {
   buttonNextMicro.disabled = controller.isLastStep();
   buttonPrevMacro.disabled = controller.isFirstStep();
   buttonNextMacro.disabled = controller.isLastStep();
-  buttonRunAll.disabled = controller.isLastStep();
+  buttonRunAll.disabled = false;
+  setRunAllIcon(controller.isLastStep() ? "restart" : "play");
 }
 
 function disableStepButtons() {
@@ -216,6 +217,24 @@ function disableEditButton() {
 
 function enableEditButton() {
   buttonEdit.disabled = false;
+}
+
+function setRunAllIcon(icon: "play" | "pause" | "restart") {
+  const iconElement = buttonRunAll.querySelector("i");
+  if (!iconElement) return;
+  iconElement.classList.remove("fa-play", "fa-pause", "fa-rotate-left");
+  if (icon === "play") {
+    iconElement.classList.add("fa-play");
+    buttonRunAll.title = "executar tudo (segure para modo turbo)";
+    return;
+  }
+  if (icon === "pause") {
+    iconElement.classList.add("fa-pause");
+    buttonRunAll.title = "pausar";
+    return;
+  }
+  iconElement.classList.add("fa-rotate-left");
+  buttonRunAll.title = "voltar ao início";
 }
 
 buttonPrevMicro.addEventListener("click", () => {
@@ -287,8 +306,7 @@ const transitionToStandby = () => {
   mouseLoader.style.display = "none";
   turboOverlay.style.display = "none";
 
-  buttonRunAll.querySelector("i")?.classList.remove("fa-pause");
-  buttonRunAll.querySelector("i")?.classList.add("fa-play");
+  setRunAllIcon(controller.isLastStep() ? "restart" : "play");
   enableEditButton();
   updateStepButtons();
 
@@ -369,8 +387,7 @@ const startTurboMode = async () => {
   disableStepButtons();
   disableEditButton();
   // Keep edit button enabled
-  buttonRunAll.querySelector("i")?.classList.add("fa-pause");
-  buttonRunAll.querySelector("i")?.classList.remove("fa-play");
+  setRunAllIcon("pause");
 
   turboOverlay.style.display = "flex";
   mouseLoader.style.display = "none";
@@ -467,8 +484,7 @@ const startPlayMode = async () => {
 
   disableStepButtons();
   disableEditButton();
-  buttonRunAll.querySelector("i")?.classList.add("fa-pause");
-  buttonRunAll.querySelector("i")?.classList.remove("fa-play");
+  setRunAllIcon("pause");
 
   setMode("play");
 
@@ -530,6 +546,14 @@ buttonRunAll.addEventListener("click", () => {
 
   switch (currentMode) {
     case "standby":
+      if (controller.isLastStep()) {
+        ifErrorOpenModal(() => {
+          controller.reset(editor.getValue());
+          controller.renderCurrentStep();
+        });
+        updateStepButtons();
+        break;
+      }
       // Start normal play mode
       startPlayMode();
       break;
