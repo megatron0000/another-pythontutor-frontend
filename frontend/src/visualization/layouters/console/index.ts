@@ -5,12 +5,7 @@ import * as d3 from "d3";
 export function createConsoleLayouter(container: HTMLElement) {
   const jsFrame = new JSFrame();
 
-  // heuristic: initial position of the console window
-  // based on the size of the viewport
-  const position =
-    window.innerWidth >= 700
-      ? { top: 60, left: window.innerWidth - 330 }
-      : { top: window.innerHeight - 170, left: 10 };
+  const position = { top: window.innerHeight - 170, left: 10 };
 
   const frame = jsFrame
     .create({
@@ -119,9 +114,10 @@ export function createConsoleLayouter(container: HTMLElement) {
   return {
     rerender(stdout: Stdout, stderr?: string) {
       const updateSelection = contentArea
-        .selectAll<HTMLDivElement, Stdout[number]>(
-          "div.console__line:not(.error)"
-        )
+        .selectAll<
+          HTMLDivElement,
+          Stdout[number]
+        >("div.console__line:not(.error)")
         .data(stdout);
 
       updateSelection.exit().remove();
