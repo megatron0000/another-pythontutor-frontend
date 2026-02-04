@@ -4,7 +4,7 @@ import { js_beautify } from "js-beautify";
 
 import "ace-builds/webpack-resolver";
 
-import { lint } from "../code/linter";
+import { lint } from "../lib/code/linter";
 
 export interface Editor {
   getValue(): string;

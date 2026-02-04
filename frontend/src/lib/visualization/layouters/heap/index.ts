@@ -11,7 +11,7 @@ import type {
   StackFrameView,
   View
 } from "../../view-module/types";
-import { setDifference } from "../../../utils";
+import { setDifference } from "../../../../utils";
 import type { ConnectionLayouter } from "../connection/connection-layouter";
 
 import { calculateConnections } from "../connection/calculate-connections";

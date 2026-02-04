@@ -12,7 +12,7 @@ import type {
 } from "../../trace/types";
 
 import { Interpreter as FraserInterpreter } from "JS-Interpreter";
-import { isPrimitive } from "../../../utils";
+import { isPrimitive } from "../../../../utils";
 
 export function isStateType<T extends Node["type"]>(
   state: FraserInterpreter.State,

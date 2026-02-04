@@ -1,6 +1,6 @@
 import type { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
 import type { PointerValue, Step } from "../../../code/trace/types";
-import { assertArray } from "../../../utils";
+import { assertArray } from "../../../../utils";
 import type {
   AnchorView,
   HeapElementView,

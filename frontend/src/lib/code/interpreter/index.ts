@@ -11,7 +11,7 @@ import type {
 import { Interpreter as FraserInterpreter } from "JS-Interpreter";
 
 import type { Node } from "JS-Interpreter-ast";
-import { isPrimitive, objectFromEntries } from "../../utils";
+import { isPrimitive, objectFromEntries } from "../../../utils";
 import { collectLocals } from "./lib/ast";
 import { ConsoleCollector } from "./lib/console-collector";
 import { DiffStack } from "./lib/diff-stack";
@@ -273,17 +273,17 @@ export class Interpreter {
       isStateType(currentState, "ThrowStatement") && currentState.done_
         ? "exception"
         : this.exceptionState !== null
-        ? "exception"
-        : isStateType(currentState, "ReturnStatement") && currentState.done_
-        ? "return"
-        : "step_line";
+          ? "exception"
+          : isStateType(currentState, "ReturnStatement") && currentState.done_
+            ? "return"
+            : "step_line";
 
     exception_message =
       isStateType(currentState, "ThrowStatement") && currentState.done_
         ? errorToString(currentState.value)
         : this.exceptionState !== null
-        ? errorToString(this.exceptionState.exception)
-        : undefined;
+          ? errorToString(this.exceptionState.exception)
+          : undefined;
 
     // collect variables in the stack, put inside `heap` and `stack_frames`
     // FIXME: this logic is incorrect in case of: [1] catch clause,
@@ -333,11 +333,11 @@ export class Interpreter {
     return this.executionState === "started"
       ? { kind: "started" }
       : this.exceptionState === null
-      ? { kind: "finished ok" }
-      : {
-          kind: "finished exception",
-          exception: this.exceptionState.exception
-        };
+        ? { kind: "finished ok" }
+        : {
+            kind: "finished exception",
+            exception: this.exceptionState.exception
+          };
   }
 
   isFirstStep(): boolean {
