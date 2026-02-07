@@ -1,5 +1,5 @@
 import { createEditor } from "../components/code-editor";
-import { MessageAPI } from "../components/message-api";
+import { messageAPI } from "../components/message-api";
 import type { PageLifecycle } from "./page-lifecycle";
 
 type CodeEditor = ReturnType<typeof createEditor>;
@@ -28,7 +28,7 @@ export function createEditPage(options: {
     }
   );
 
-  new MessageAPI().listen(() => {
+  messageAPI.listen("focused", () => {
     editor.focus();
   });
 
