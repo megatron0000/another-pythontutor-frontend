@@ -1,6 +1,5 @@
 /**
- * Root script file. Sets up the 2 pages of the application
- * (#edit and #visualize)
+ * Root script file. Sets up the edit and visualize pages.
  */
 
 import { createEditPage } from "./pages/edit-page";
@@ -16,7 +15,7 @@ initializeWelcomeModal();
 
 type Page = "edit" | "visualize";
 
-const PAGE_HASHES: Record<Page, string> = {
+const PAGE_SELECTORS: Record<Page, string> = {
   edit: "#edit",
   visualize: "#visualize"
 };
@@ -24,24 +23,20 @@ const PAGE_HASHES: Record<Page, string> = {
 let currentPage: Page | null = null;
 let pages: Record<Page, PageLifecycle>;
 
-function getPageFromHash(hash: string): Page {
-  return hash === PAGE_HASHES.visualize ? "visualize" : "edit";
-}
-
 function showPage(page: Page) {
   document
     .querySelectorAll<HTMLElement>("main > section")
     .forEach(el => el.classList.add("hidden"));
 
-  const target = document.querySelector<HTMLElement>(PAGE_HASHES[page]);
+  const target = document.querySelector<HTMLElement>(PAGE_SELECTORS[page]);
   if (target) {
     target.classList.remove("hidden");
   }
 }
 
-function handlePageChange(nextPage: Page) {
-  if (currentPage === nextPage) {
-    showPage(nextPage);
+function navigateTo(page: Page) {
+  if (currentPage === page) {
+    showPage(page);
     return;
   }
 
@@ -50,36 +45,13 @@ function handlePageChange(nextPage: Page) {
   }
 
   // Show the page before startup so layout-dependent code measures correctly.
-  showPage(nextPage);
-  pages[nextPage].startup();
-  currentPage = nextPage;
-}
-
-function handleHashChange() {
-  const nextPage = getPageFromHash(window.location.hash);
-  handlePageChange(nextPage);
-}
-
-function navigateTo(page: Page) {
-  const hash = PAGE_HASHES[page];
-  if (window.location.hash !== hash) {
-    window.location.hash = hash;
-    return;
-  }
-  handlePageChange(page);
+  currentPage = page;
+  showPage(page);
+  pages[page].startup();
 }
 
 function initializeNavigation() {
-  window.addEventListener("hashchange", handleHashChange);
-
-  // Normalize initial hash so direct navigation works on first load.
-  const initialPage = getPageFromHash(window.location.hash);
-  if (window.location.hash !== PAGE_HASHES[initialPage]) {
-    window.location.hash = PAGE_HASHES[initialPage];
-    return;
-  }
-
-  handlePageChange(initialPage);
+  navigateTo("edit");
 }
 
 /**
