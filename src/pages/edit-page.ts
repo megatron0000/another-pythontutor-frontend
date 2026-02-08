@@ -18,6 +18,8 @@ const MESSAGE_TYPE_FOCUSED = "focused";
 const MESSAGE_TYPE_SET_CODE = "set-code";
 const MESSAGE_TYPE_RUN_CODE = "run-code";
 const MESSAGE_TYPE_RUN_RESULT = "run-code-result";
+const MESSAGE_TYPE_GET_CODE = "get-code";
+const MESSAGE_TYPE_GET_CODE_RESULT = "get-code-result";
 
 export function createEditPage(options: {
   onVisualize: () => void;
@@ -61,12 +63,12 @@ export function createEditPage(options: {
 
   const postRunResult = (
     status: "success" | "error",
-    output: number[],
+    output: unknown[],
     details?: Record<string, unknown>
   ) => {
     const payload: MessageData & {
       status: "success" | "error";
-      output: number[];
+      output: unknown[];
       error?: string;
       details?: Record<string, unknown>;
     } = {
@@ -81,6 +83,15 @@ export function createEditPage(options: {
         payload.error = details.error;
       }
     }
+
+    window.parent.postMessage(payload, "*");
+  };
+
+  const postCodeResult = (code: string) => {
+    const payload: MessageData & { code: string } = {
+      type: MESSAGE_TYPE_GET_CODE_RESULT,
+      code
+    };
 
     window.parent.postMessage(payload, "*");
   };
@@ -108,7 +119,7 @@ export function createEditPage(options: {
       return;
     }
 
-    const output: number[] = [];
+    const output: unknown[] = [];
     let inputIndex = 0;
 
     const stepper = new Stepper(code, [
@@ -124,7 +135,7 @@ export function createEditPage(options: {
       [
         "output",
         (node, throwException, content: unknown) => {
-          output.push(Number(content));
+          output.push(content);
         }
       ]
     ]);
@@ -169,6 +180,10 @@ export function createEditPage(options: {
     postRunResult("success", output);
   };
 
+  const handleGetCode = () => {
+    postCodeResult(editor.getValue());
+  };
+
   const registerMessageListeners = () => {
     if (messageListenerIds.length > 0) {
       return;
@@ -179,7 +194,8 @@ export function createEditPage(options: {
         editor.focus();
       }),
       messageAPI.listen(MESSAGE_TYPE_SET_CODE, handleSetCode),
-      messageAPI.listen(MESSAGE_TYPE_RUN_CODE, handleRunCode)
+      messageAPI.listen(MESSAGE_TYPE_RUN_CODE, handleRunCode),
+      messageAPI.listen(MESSAGE_TYPE_GET_CODE, handleGetCode)
     ];
   };
 
