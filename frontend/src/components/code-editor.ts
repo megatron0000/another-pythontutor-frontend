@@ -9,6 +9,7 @@ import { lint } from "../lib/code/linter";
 export interface Editor {
   getValue(): string;
   hasErrors(): boolean;
+  setValue(value: string): void;
   focus(): void;
 }
 
@@ -65,6 +66,7 @@ export function createEditor(
   return {
     getValue: () => editor.getValue(),
     hasErrors: () => hasErrors,
+    setValue: (value: string) => editor.session.doc.setValue(value),
     focus: () => editor.focus()
   };
 }
