@@ -1,4 +1,8 @@
 import { createEditor } from "../components/code-editor";
+import {
+  hideQuickTestModal,
+  showQuickTestModal
+} from "../components/quick-test-modal";
 import { messageAPI, type MessageData } from "../components/message-api";
 import { Stepper, type StepKind } from "../lib/code/interpreter/lib/stepper";
 import { lint } from "../lib/code/linter";
@@ -28,12 +32,16 @@ export function createEditPage(options: {
   const buttonVisualize = document.getElementById(
     "visualize-execution-button"
   ) as HTMLButtonElement;
+  const buttonQuickTest = document.getElementById(
+    "quick-test-button"
+  ) as HTMLButtonElement;
 
   const editor: CodeEditor = createEditor(
     "code-editor-container",
     options.initialCode ?? DEFAULT_CODE,
     () => {
       buttonVisualize.disabled = editor.hasErrors();
+      buttonQuickTest.disabled = editor.hasErrors();
     }
   );
 
@@ -210,16 +218,24 @@ export function createEditPage(options: {
     options.onVisualize();
   });
 
+  buttonQuickTest.addEventListener("click", () => {
+    showQuickTestModal(() => editor.getValue());
+  });
+
   const startup = () => {
     // Ensure the button state matches current editor validity on page entry.
     buttonVisualize.style.display = "block";
     buttonVisualize.textContent = "Executar";
     buttonVisualize.disabled = editor.hasErrors();
+    buttonQuickTest.style.display = "block";
+    buttonQuickTest.disabled = editor.hasErrors();
     registerMessageListeners();
   };
 
   const teardown = () => {
     buttonVisualize.style.display = "none";
+    buttonQuickTest.style.display = "none";
+    hideQuickTestModal();
     unregisterMessageListeners();
   };
 

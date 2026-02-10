@@ -62,6 +62,12 @@ For more information about SproutCore, visit http://www.sproutcore.com
  */
 
 /**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Echos the value of a value. Trys to print the value out
  * in the best way possible given the different types.
  *

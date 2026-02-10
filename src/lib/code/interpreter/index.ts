@@ -196,6 +196,26 @@ export class Interpreter {
     }
   }
 
+  runToCompletion({ maxSteps = 100000 }: { maxSteps?: number } = {}): void {
+    const resolvedMaxSteps =
+      Number.isFinite(maxSteps) && maxSteps > 0 ? Math.floor(maxSteps) : 100000;
+    let iterations = 0;
+
+    while (!this.isLastStep()) {
+      if (iterations >= resolvedMaxSteps) {
+        this.exceptionState = {
+          exception:
+            "Programa interrompido porque excedeu limite de 100 000 passos (verifique se há loops infinitos)"
+        };
+        this.executionState = "finished";
+        return;
+      }
+
+      this.stepForward("micro", { saveState: false });
+      iterations += 1;
+    }
+  }
+
   /**
    * Returns true if the current state is on a DebuggerStatement
    */

@@ -13,8 +13,14 @@
   color: rgba(0, 0, 0, 0.85);
   cursor: pointer;
   display: inline-flex;
-  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
-    Arial, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    system-ui,
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
   font-weight: 600;
   justify-content: center;
   line-height: 1.25;
@@ -57,4 +63,19 @@ button[disabled] {
 
 .orange {
   background-color: #fa6400;
+}
+
+.quick-test-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background-color: #e53935;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  line-height: 1;
+  pointer-events: none;
 }
