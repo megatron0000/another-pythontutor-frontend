@@ -48,8 +48,14 @@
 .console-window-container {
   z-index: 10;
   position: relative;
-  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
-    Arial, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    system-ui,
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
   font-size: 14px;
 }
 
@@ -61,7 +67,7 @@
   display: flex;
   border-bottom: 1px solid darkgray;
   padding: 5px;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .console__line.error {
@@ -286,7 +292,9 @@
 }
 
 .stack__frame__header {
-  font-family: Andale mono, monospace;
+  font-family:
+    Andale mono,
+    monospace;
   font-size: 10pt;
   margin-top: 4px;
   margin-bottom: 3px;
@@ -336,7 +344,9 @@
 }
 
 .value__string {
-  font-family: Andale mono, monospace;
+  font-family:
+    Andale mono,
+    monospace;
   white-space: nowrap;
 }
 

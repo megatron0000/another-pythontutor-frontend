@@ -24,6 +24,14 @@
           </button>
           <button
             class="button margin-left-small"
+            id="quick-test-button"
+            title="teste rápido"
+          >
+            Teste rápido
+            <span class="quick-test-badge">Novo!</span>
+          </button>
+          <button
+            class="button margin-left-small"
             title="ajuda"
             onclick="window.open('help.html', '_blank').focus()"
           >
@@ -240,6 +248,39 @@
               não mostrar novamente neste computador.
             </label>
             <button class="button" id="welcome-modal-close">Fechar</button>
+          </section>
+        </section>
+      </article>
+
+      <article id="quick-test-modal" style="display: none">
+        <section class="quick-test-modal-content">
+          <header class="quick-test-modal-header">
+            <h3>Teste rápido</h3>
+            <button class="button" id="quick-test-close" title="fechar">
+              Fechar
+            </button>
+          </header>
+          <section class="quick-test-modal-body">
+            <p class="quick-test-helper">
+              Aqui você pode testar rapidamente seu código. Digite as entradas
+              abaixo; quando o programa pedir números, eles serão lidos um a um.
+              Depois clique em Executar teste para rodar o código e ver a saída.
+            </p>
+            <label for="quick-test-input">
+              Entradas (números separados por espaços ou quebras de linha)
+            </label>
+            <textarea
+              id="quick-test-input"
+              class="quick-test-textarea"
+              rows="5"
+              spellcheck="false"
+              placeholder="Ex: 1 2 3"
+            ></textarea>
+            <div class="quick-test-actions">
+              <button class="button" id="quick-test-run">Executar teste</button>
+            </div>
+            <label for="quick-test-output">Saída</label>
+            <div id="quick-test-output" class="quick-test-output"></div>
           </section>
         </section>
       </article>
