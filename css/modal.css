@@ -158,6 +158,9 @@
 
 #quick-test-modal.quick-test-running .quick-test-textarea {
   background-color: rgba(0, 0, 0, 0.03);
+}
+
+#quick-test-modal .quick-test-textarea {
   outline: none;
 }
 
