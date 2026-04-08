@@ -118,7 +118,7 @@
 
 .quick-test-textarea {
   width: 100%;
-  min-height: 110px;
+  min-height: 70px;
   max-width: 100%;
   box-sizing: border-box;
   resize: vertical;
