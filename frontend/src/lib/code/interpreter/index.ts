@@ -9,6 +9,7 @@ import type {
 } from "../trace/types";
 
 import { Interpreter as FraserInterpreter } from "JS-Interpreter";
+import { parse } from "JS-Interpreter-acorn";
 
 import type { Node } from "JS-Interpreter-ast";
 import { isPrimitive, objectFromEntries } from "../../../utils";
@@ -80,6 +81,14 @@ export class Interpreter {
    * Utility to collect console logs
    */
   private consoleCollector: ConsoleCollector = new ConsoleCollector();
+
+  static isEmptyProgram(code: string): boolean {
+    try {
+      return (parse(code) as { body: unknown[] }).body.length === 0;
+    } catch {
+      return false;
+    }
+  }
 
   /**
    * @throws if an exception happens inside the Stepper when taking

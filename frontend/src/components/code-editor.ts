@@ -5,10 +5,12 @@ import { js_beautify } from "js-beautify";
 import "ace-builds/webpack-resolver";
 
 import { lint } from "../lib/code/linter";
+import { Interpreter } from "../lib/code/interpreter";
 
 export interface Editor {
   getValue(): string;
   hasErrors(): boolean;
+  isEmptyProgram(): boolean;
   setValue(value: string): void;
   focus(): void;
 }
@@ -34,11 +36,13 @@ export function createEditor(
   const linter = new Linter(editor);
 
   let hasErrors = false;
+  let isEmpty = Interpreter.isEmptyProgram(initialCode);
 
   editor.session.on("change", async () => {
     const lintResult = await linter.lintAndMark();
     if (lintResult !== LintResult.IGNORED) {
       hasErrors = lintResult === LintResult.HAS_ERROR;
+      isEmpty = Interpreter.isEmptyProgram(editor.getValue());
       onCodeChange();
     }
   });
@@ -66,6 +70,7 @@ export function createEditor(
   return {
     getValue: () => editor.getValue(),
     hasErrors: () => hasErrors,
+    isEmptyProgram: () => isEmpty,
     setValue: (value: string) => editor.session.doc.setValue(value),
     focus: () => editor.focus()
   };

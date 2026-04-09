@@ -1,8 +1,6 @@
 #code-editor-container {
   flex: 1;
 
-  /* fix: the code area must not get visibly cut above by the top header */
-  top: 2px;
   position: relative;
 }
 
