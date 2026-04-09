@@ -35,13 +35,67 @@ export function createEditPage(options: {
   const buttonQuickTest = document.getElementById(
     "quick-test-button"
   ) as HTMLButtonElement;
+  const runStatusStrip = document.getElementById(
+    "run-status-strip"
+  ) as HTMLElement;
+
+  type RunState = "ready" | "lint-error" | "empty";
+
+  const getRunState = (): RunState => {
+    if (editor.hasErrors()) return "lint-error";
+    if (editor.isEmptyProgram()) return "empty";
+    return "ready";
+  };
+
+  const TYPING_FRAMES = [".", "..", "..."];
+  let typingFrame = 0;
+  let typingInterval: ReturnType<typeof setInterval> | null = null;
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  const DEBOUNCE_MS = 1000;
+
+  const startTypingIndicator = () => {
+    buttonVisualize.disabled = true;
+    buttonQuickTest.disabled = true;
+    if (typingInterval !== null) return;
+    typingFrame = 0;
+    runStatusStrip.textContent = TYPING_FRAMES[typingFrame];
+    typingInterval = setInterval(() => {
+      typingFrame = (typingFrame + 1) % TYPING_FRAMES.length;
+      runStatusStrip.textContent = TYPING_FRAMES[typingFrame];
+    }, 300);
+  };
+
+  const updateRunState = () => {
+    if (typingInterval !== null) {
+      clearInterval(typingInterval);
+      typingInterval = null;
+    }
+    const state = getRunState();
+    const isDisabled = state !== "ready";
+    buttonVisualize.disabled = isDisabled;
+    buttonQuickTest.disabled = isDisabled;
+    if (state === "lint-error") {
+      runStatusStrip.textContent = "⚠ Corrija os erros para executar";
+      runStatusStrip.dataset.kind = "lint";
+    } else if (state === "empty") {
+      runStatusStrip.textContent = "⚠ Escreva algum código para executar";
+      runStatusStrip.dataset.kind = "empty";
+    } else {
+      runStatusStrip.textContent = "✓ Pronto para executar";
+      runStatusStrip.dataset.kind = "ready";
+    }
+  };
 
   const editor: CodeEditor = createEditor(
     "code-editor-container",
     options.initialCode ?? DEFAULT_CODE,
     () => {
-      buttonVisualize.disabled = editor.hasErrors();
-      buttonQuickTest.disabled = editor.hasErrors();
+      startTypingIndicator();
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        debounceTimer = null;
+        updateRunState();
+      }, DEBOUNCE_MS);
     }
   );
 
@@ -224,11 +278,10 @@ export function createEditPage(options: {
 
   const startup = () => {
     // Ensure the button state matches current editor validity on page entry.
-    buttonVisualize.style.display = "block";
     buttonVisualize.textContent = "Executar";
-    buttonVisualize.disabled = editor.hasErrors();
+    buttonVisualize.style.display = "block";
     buttonQuickTest.style.display = "block";
-    buttonQuickTest.disabled = editor.hasErrors();
+    updateRunState();
     registerMessageListeners();
   };
 

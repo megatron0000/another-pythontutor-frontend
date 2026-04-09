@@ -38,3 +38,29 @@ main,
 
   display: flex;
 }
+
+.run-status-strip {
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.run-status-strip[data-kind="ready"] {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.run-status-strip[data-kind="lint"] {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.run-status-strip[data-kind="empty"] {
+  background-color: #fff3cd;
+  color: #664d03;
+}
