@@ -18,6 +18,7 @@ export interface EditPage extends PageLifecycle {
 
 const DEFAULT_CODE = "// Controles: veja página de ajuda\n// (botão '?')";
 const DEFAULT_MAX_STEPS = 100000;
+const INITIAL_CODE_PARAM = "initial_code";
 const MESSAGE_TYPE_FOCUSED = "focused";
 const MESSAGE_TYPE_SET_CODE = "set-code";
 const MESSAGE_TYPE_RUN_CODE = "run-code";
@@ -25,10 +26,26 @@ const MESSAGE_TYPE_RUN_RESULT = "run-code-result";
 const MESSAGE_TYPE_GET_CODE = "get-code";
 const MESSAGE_TYPE_GET_CODE_RESULT = "get-code-result";
 
-export function createEditPage(options: {
-  onVisualize: () => void;
-  initialCode?: string;
-}): EditPage {
+function getInitialCodeFromUrl(): string | undefined {
+  const code = new URLSearchParams(window.location.search).get(
+    INITIAL_CODE_PARAM
+  );
+  return code === null ? undefined : code;
+}
+
+function setInitialCodeInUrl(code: string) {
+  const url = new URL(window.location.href);
+  if (code) {
+    url.searchParams.set(INITIAL_CODE_PARAM, code);
+  } else {
+    url.searchParams.delete(INITIAL_CODE_PARAM);
+  }
+
+  const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+  window.history.replaceState(window.history.state, "", nextUrl);
+}
+
+export function createEditPage(options: { onVisualize: () => void }): EditPage {
   const buttonVisualize = document.getElementById(
     "visualize-execution-button"
   ) as HTMLButtonElement;
@@ -88,8 +105,9 @@ export function createEditPage(options: {
 
   const editor: CodeEditor = createEditor(
     "code-editor-container",
-    options.initialCode ?? DEFAULT_CODE,
+    getInitialCodeFromUrl() ?? DEFAULT_CODE,
     () => {
+      setInitialCodeInUrl(editor.getValue());
       startTypingIndicator();
       if (debounceTimer !== null) clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
